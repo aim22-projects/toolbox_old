@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:toolbox/screens/home.dart';
+import 'package:toolbox/screens/collections.dart';
+import 'package:toolbox/screens/downloads.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,11 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(
         useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark(
-        useMaterial3: true,
-      ),
-      themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      // darkTheme: ThemeData.dark(
+      //   useMaterial3: true,
+      // ),
+      // themeMode: ThemeMode.system,
+      home: const CollectionsScreen(),
     );
   }
 }
