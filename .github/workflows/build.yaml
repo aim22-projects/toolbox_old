@@ -1,0 +1,83 @@
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - main # Adjust this to your main branch name
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19" # Adjust to your Flutter version
+          channel: "stable"
+
+      - name: Get Packages
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+
+      # release:
+      # name: Release APK
+      # needs: build
+      # runs-on: ubuntu-latest
+      # steps:
+      - name: Release on GitHub
+        id: create-new-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }} # Use a tag format appropriate for your project
+      - name: Upload assets to Github Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-new-release.outputs.upload_url}}
+          asset_path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+          asset_name: ToolBox-arm64-v8a-${{github.run_number}}.apk
+          asset_content_type: application/apk
+
+      # deploy_to_telegram:
+      # name: Deploy release
+      # needs: build
+      # runs-on: ubuntu-latest
+      # steps:
+      - name: Create Telegram Push Messages
+        env:
+          ReleaseMessageForTelegram: |
+            "New build released!
+            Commit: ${{github.event.head_commit.message}}
+            Branch: ${{github.ref}}"
+          SendMessageUrl: https://api.telegram.org/bot${{ vars.TELEGRAM_BOT_TOKEN }}/sendMessage
+          SendDocumentUrl: https://api.telegram.org/bot${{ vars.TELEGRAM_BOT_TOKEN }}/sendDocument
+        run: echo $ReleaseMessageForTelegram
+
+      - name: Send Release Message to telegram bot
+        run: |
+          curl --location 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage' \
+          --form 'chat_id="${{ secrets.TELEGRAM_BOT_PERSONAL_CHAT_ID }}"' \
+          --form 'text="New build released!
+            Commit: ${{github.event.head_commit.message}}
+            Branch: ${{github.ref}}"'
+      - name: Send build files to telegram
+        run: |
+          curl --location 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument' \
+          --form 'chat_id="${{ secrets.TELEGRAM_BOT_PERSONAL_CHAT_ID }}"' \
+          --form 'document=@"build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"' \
+          --form 'caption="Arm64 build:${{github.run_number}}"'
+      - name: Send build files to telegram
+        run: |
+          curl --location 'https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendDocument' \
+          --form 'chat_id="${{ secrets.TELEGRAM_BOT_PERSONAL_CHAT_ID }}"' \
+          --form 'document=@"build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk"' \
+          --form 'caption="Arm build:${{github.run_number}}"'
