@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:toolbox/screens/collections.dart';
-import 'package:toolbox/screens/downloads.dart';
+import 'package:toolbox/services/sharing_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,37 +15,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late StreamSubscription _intentSub;
   final _sharedFiles = <SharedMediaFile>[];
 
   @override
   void initState() {
     super.initState();
 
-    // Listen to media sharing coming from outside the app while the app is in the memory.
+    SharingService.instance.listen((value) {
+      // 1. return if data is null
+      if (value == null || value.isEmpty) return;
 
-    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen((value) {
+      // 2. check mime type
+      if (value.first.mimeType != 'text/plain') return;
+
       setState(() {
         _sharedFiles.clear();
         _sharedFiles.addAll(value);
-
-        print(_sharedFiles.map((f) => f.toMap()));
-      });
-    }, onError: (err) {
-      print("getIntentDataStream error: $err");
-    });
-
-    // Get the media sharing coming from outside the app while the app is closed.
-    ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-      setState(() {
-        _sharedFiles.clear();
-        _sharedFiles.addAll(value);
-        print(_sharedFiles.map((f) => f.toMap()));
-
-        // Tell the library that we are done processing the intent.
-        ReceiveSharingIntent.instance.reset();
       });
     });
+  }
+
+  @override
+  void dispose() {
+    SharingService.instance.dispose();
+
+    super.dispose();
   }
 
   @override
