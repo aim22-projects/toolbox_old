@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DownloadsScreen extends StatelessWidget {
   const DownloadsScreen({super.key});
@@ -136,6 +137,10 @@ class DownloadsScreen extends StatelessWidget {
                 const EdgeInsetsDirectional.only(start: 16.0, end: 16.0),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {GoRouter.of(context).push('/downloads/new')},
+        child: const Icon(Icons.add),
       ),
     );
   }

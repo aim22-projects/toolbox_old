@@ -3,7 +3,7 @@ import 'package:toolbox/screens/downloads.dart';
 import 'package:toolbox/screens/home.dart';
 import 'package:toolbox/screens/new_download.dart';
 
-final appRouter = GoRouter(initialLocation: '/', routes: [
+final appRouter = GoRouter(initialLocation: '/downloads', routes: [
   GoRoute(
     name: 'home',
     path: '/',
