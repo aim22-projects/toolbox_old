@@ -37,7 +37,7 @@ class _DownloadsScreenState extends State<DownloadsScreen>
   }
 
   Future<void> init() async {
-    await Future<void>.delayed(const Duration(seconds: 3));
+    // await Future<void>.delayed(const Duration(seconds: 3));
 
     // 1. fetch database values
     var result = await downloadsRepository.getDownloads();
