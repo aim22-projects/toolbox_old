@@ -34,41 +34,57 @@ class _NewDownloadState extends State<NewDownload> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: urlInputController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                filled: true,
-                hintText: 'Download url',
-                // label: Text('Download url'),
-              ),
-              autofocus: true,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: fileNameInputController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                filled: true,
-                hintText: 'File name',
-                // label: Text('File name'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: downloadLocationInputController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderSide: BorderSide.none),
-                filled: true,
-                hintText: 'Download location',
-                // label: TextText('Download location'),
-              ),
+          Card.filled(
+            margin: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: urlInputController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.link),
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    // filled: true,
+                    hintText: 'Download url',
+                    // label: Text('Download url'),
+                  ),
+                  autofocus: true,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                ),
+                const Divider(
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                TextField(
+                  controller: fileNameInputController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.title),
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    // filled: true,
+                    hintText: 'File name',
+                    // label: Text('File name'),
+                  ),
+                ),
+                const Divider(
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                TextField(
+                  controller: downloadLocationInputController,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.folder),
+                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                    // filled: true,
+                    hintMaxLines: 1,
+                    helperMaxLines: 1,
+                    hintText: 'Download location',
+                    // label: TextText('Download location'),
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -87,13 +103,13 @@ class _NewDownloadState extends State<NewDownload> {
                     onPressed: () async {
                       var result = await downloadsRepository.insertDownload(
                         Download(
-                          url: urlInputController.text,
-                          name: fileNameInputController.text,
-                          location: downloadLocationInputController.text,
-                          createdAt: '',
-                        ),
+                            url: urlInputController.text,
+                            name: fileNameInputController.text,
+                            location: downloadLocationInputController.text,
+                            createdAt: '',
+                            downloadStatus: DownloadStatus.completed),
                       );
-                      print(result);
+                      // ignore: use_build_context_synchronously
                       GoRouter.of(context).pop();
                       // if (result)
                     },

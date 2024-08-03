@@ -15,7 +15,6 @@ class DownloadsRepository {
     database = await baseRepository.database;
     await database?.execute(createTableQuery);
     initialized = true;
-    print("database service started");
   }
 
   static DownloadsRepository get _instance => DownloadsRepository._internal();
@@ -28,7 +27,8 @@ class DownloadsRepository {
       ${DownloadFields.url} TEXT NOT NULL,
       ${DownloadFields.name} TEXT NOT NULL,
       ${DownloadFields.location} TEXT NOT NULL,
-      ${DownloadFields.createdAt} TEXT NOT NULL
+      ${DownloadFields.createdAt} TEXT NOT NULL,
+      ${DownloadFields.downloadStatus} INTEGER NOT NULL
     )
   ''';
 

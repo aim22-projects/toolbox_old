@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
+import 'package:toolbox/widgets/download_tile.dart';
 
 class DownloadsScreen extends StatefulWidget {
   const DownloadsScreen({super.key});
@@ -80,45 +81,29 @@ class _DownloadsScreenState extends State<DownloadsScreen>
       // ),
       body: RefreshIndicator(
         onRefresh: init,
-        child: ListView.separated(
-          shrinkWrap: true,
+        child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          // physics: const ClampingScrollPhysics(),
-          itemBuilder: (context, index) => ListTile(
-            leading: Stack(
-              children: [
-                Positioned.fill(
-                  child: CircularProgressIndicator(
-                    value: 0.5,
-                    backgroundColor: Theme.of(context).canvasColor,
-                    color: Theme.of(context).primaryColor,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Card.filled(
+                margin: const EdgeInsets.all(8),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (context, index) => DownloadTile(
+                    fileName: downloads[index].name,
+                    downloadStatus: DownloadStatus.completed,
                   ),
+                  separatorBuilder: (context, index) => const Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  itemCount: downloads.length,
                 ),
-                const CircleAvatar(
-                  radius: 16,
-                  child: Icon(Icons.video_call),
-                )
-              ],
+              ),
             ),
-            title: Text(downloads[index].url),
-            subtitle: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('10%'),
-                Text('122 MB / 289 MB'),
-                Text('1.2 MB/s'),
-              ],
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.pause),
-              onPressed: () => {},
-              iconSize: 20,
-            ),
-            contentPadding:
-                const EdgeInsetsDirectional.only(start: 16.0, end: 16.0),
-          ),
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: downloads.length,
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
