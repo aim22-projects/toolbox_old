@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/services/sharing_service.dart';
@@ -22,17 +21,9 @@ class _MyAppState extends State<MyApp> {
       // 1. return if data is null
       if (value == null || value.isEmpty) return;
 
-      if (kDebugMode) {
-        print("data:");
-        print((value.map((item) => item.toMap())));
-      }
-
       // 2. check mime type
       if (value.first.mimeType != 'text/plain') return;
 
-      if (kDebugMode) {
-        print("url: ${value.first.path}");
-      }
       // GoRouter.of(context).go('/downloads/new');
       appRouter.push('/downloads/new', extra: value.first.path);
     });
