@@ -51,7 +51,7 @@ class _DownloadsScreenState extends State<DownloadsScreen>
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Downloadss'),
+        title: const Text('Downloads'),
         // titleTextStyle: Theme.of(context).textTheme.titleMedium,
       ),
       // bottomNavigationBar: BottomNavigationBar(
@@ -122,7 +122,10 @@ class _DownloadsScreenState extends State<DownloadsScreen>
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {GoRouter.of(context).push('/downloads/new')},
+        onPressed: () async {
+          var result = await GoRouter.of(context).push('/downloads/new');
+          init();
+        },
         child: const Icon(Icons.add),
         // onPressed: () => NewDownloadSheet.show(context),
       ),

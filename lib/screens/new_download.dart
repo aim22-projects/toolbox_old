@@ -93,6 +93,7 @@ class _NewDownloadState extends State<NewDownload> {
                           createdAt: '',
                         ),
                       );
+                      print(result);
                       GoRouter.of(context).pop();
                       // if (result)
                     },
