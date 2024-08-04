@@ -1,46 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:toolbox/models/download.dart';
-import 'package:toolbox/repositories/database/downloads.dart';
+import 'package:provider/provider.dart';
+import 'package:toolbox/providers/new_download.dart';
 
-class NewDownload extends StatefulWidget {
+class NewDownload extends StatelessWidget {
   final String? downloadUrl;
   const NewDownload({super.key, this.downloadUrl});
 
   @override
-  State<NewDownload> createState() => _NewDownloadState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<NewDownloadProvider>(
+      create: (context) => NewDownloadProvider(
+        context: context,
+        downloadUrl: downloadUrl,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('New Download'),
+        ),
+        body: const NewDownloadForm(),
+      ),
+    );
+  }
 }
 
-class _NewDownloadState extends State<NewDownload> {
-  final urlInputController = TextEditingController();
-  final fileNameInputController = TextEditingController();
-  final downloadLocationInputController = TextEditingController();
-  String? downloadUrl = '';
-
-  DownloadsRepository downloadsRepository = DownloadsRepository();
-
-  @override
-  void initState() {
-    urlInputController.text = widget.downloadUrl ?? '';
-
-    super.initState();
-  }
+class NewDownloadForm extends StatelessWidget {
+  const NewDownloadForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Download'),
-      ),
-      body: Column(
-        children: [
-          Card.filled(
-            margin: const EdgeInsets.all(8),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: urlInputController,
+    return Column(
+      children: [
+        Card.filled(
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Selector<NewDownloadProvider, TextEditingController>(
+                selector: (_, provider) => provider.urlInputController,
+                builder: (context, value, child) => TextField(
+                  controller: value,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.link),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -52,13 +51,16 @@ class _NewDownloadState extends State<NewDownload> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                 ),
-                const Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                ),
-                TextField(
-                  controller: fileNameInputController,
+              ),
+              const Divider(
+                height: 1,
+                indent: 16,
+                endIndent: 16,
+              ),
+              Selector<NewDownloadProvider, TextEditingController>(
+                selector: (_, provider) => provider.fileNameInputController,
+                builder: (context, value, child) => TextField(
+                  controller: value,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.title),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -67,13 +69,17 @@ class _NewDownloadState extends State<NewDownload> {
                     // label: Text('File name'),
                   ),
                 ),
-                const Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                ),
-                TextField(
-                  controller: downloadLocationInputController,
+              ),
+              const Divider(
+                height: 1,
+                indent: 16,
+                endIndent: 16,
+              ),
+              Selector<NewDownloadProvider, TextEditingController>(
+                selector: (_, provider) =>
+                    provider.downloadLocationInputController,
+                builder: (context, value, child) => TextField(
+                  controller: value,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.folder),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -84,43 +90,34 @@ class _NewDownloadState extends State<NewDownload> {
                     // label: TextText('Download location'),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => GoRouter.of(context).pop(),
-                    child: const Text("Cancel"),
-                  ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () => GoRouter.of(context).pop(),
+                  child: const Text("Cancel"),
                 ),
-                Expanded(
+              ),
+              Selector<NewDownloadProvider, Future<void> Function()?>(
+                selector: (_, provider) => provider.addNewDownloadEvent,
+                builder: (context, value, child) => Expanded(
                   child: TextButton(
-                    onPressed: () async {
-                      var result = await downloadsRepository.insertDownload(
-                        Download(
-                            url: urlInputController.text,
-                            name: fileNameInputController.text,
-                            location: downloadLocationInputController.text,
-                            createdAt: '',
-                            downloadStatus: DownloadStatus.completed),
-                      );
-                      // ignore: use_build_context_synchronously
-                      GoRouter.of(context).pop();
-                      // if (result)
-                    },
+                    onPressed: value,
                     child: const Text("Download"),
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

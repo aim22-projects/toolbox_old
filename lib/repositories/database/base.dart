@@ -12,22 +12,23 @@ class BaseDatabaseRepository {
   Database? _database;
 
   Future<Database?> get database async {
+    // 1. return _database if not null;
+
     if (_database != null) {
       return _database;
     }
-    // return _database;
-    _database = await _initDatabase();
-    return _database!;
+
+    // 2. init database, set to _database and return
+    // _database = await _initDatabase();
+    // return _database!;
+
+    // 2. init database, set to _database and return
+    return _database = await _initDatabase();
   }
 
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
     return await openDatabase(path, version: 1);
-  }
-
-  void _createTables(Database db, int version) async {
-    // await db.execute(PostService.createTableQuery);
-    // await db.execute(DownloadService.createTableQuery);
   }
 }

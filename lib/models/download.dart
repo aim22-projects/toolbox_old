@@ -20,6 +20,7 @@ class DownloadFields {
   static const String location = 'location';
   static const String createdAt = 'createdAt';
   static const String downloadStatus = 'downloadStatus';
+  static const String thumbnailUrl = 'thumbnailUrl';
 
   // table name
   static const String tableName = 'downloads';
@@ -32,6 +33,7 @@ class Download {
   String location;
   String createdAt;
   DownloadStatus downloadStatus;
+  String thumbnailUrl;
 
   Download({
     this.id,
@@ -40,6 +42,7 @@ class Download {
     required this.location,
     required this.createdAt,
     required this.downloadStatus,
+    required this.thumbnailUrl,
   });
 
   Download.from(Map<String, dynamic> value)
@@ -48,7 +51,35 @@ class Download {
         name = value[DownloadFields.name],
         location = value[DownloadFields.location],
         createdAt = value[DownloadFields.createdAt],
-        downloadStatus = DownloadStatus.values[value[DownloadFields.id]];
+        downloadStatus = DownloadStatus.values.firstWhere(
+            (item) => item.value == value[DownloadFields.createdAt],
+            orElse: () => DownloadStatus.loading),
+        thumbnailUrl = value[DownloadFields.thumbnailUrl];
+
+  factory Download.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'id': int id,
+        'url': String url,
+        'name': String name,
+        'location': String location,
+        'createdAt': String createdAt,
+        'downloadStatus': int downloadStatus,
+        'thumbnailUrl': String thumbnailUrl,
+      } =>
+        Download(
+            id: id,
+            url: url,
+            name: name,
+            location: location,
+            createdAt: createdAt,
+            downloadStatus: DownloadStatus.values.firstWhere(
+                (item) => item.value == downloadStatus,
+                orElse: () => DownloadStatus.loading),
+            thumbnailUrl: thumbnailUrl),
+      _ => throw const FormatException('Failed to load album.'),
+    };
+  }
 
   Map<String, dynamic> toMap() => {
         DownloadFields.id: id,
@@ -56,6 +87,7 @@ class Download {
         DownloadFields.name: name,
         DownloadFields.location: location,
         DownloadFields.createdAt: createdAt,
-        DownloadFields.downloadStatus: downloadStatus.value
+        DownloadFields.downloadStatus: downloadStatus.value,
+        DownloadFields.thumbnailUrl: thumbnailUrl
       };
 }
