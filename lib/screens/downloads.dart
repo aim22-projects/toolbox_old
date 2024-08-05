@@ -15,9 +15,22 @@ class DownloadsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Downloads'),
+          actions: [
+            Selector<DownloadsProvider, Future<void> Function()>(
+              selector: (_, provider) => provider.init,
+              builder: (context, value, child) => IconButton.filledTonal(
+                onPressed: value,
+                icon: const Icon(Icons.refresh),
+              ),
+            ),
+          ],
         ),
-        body: RefreshIndicator(
-          onRefresh: context.read<DownloadsProvider>().init,
+        body: Selector<DownloadsProvider, Future<void> Function()>(
+          selector: (_, provider) => provider.init,
+          builder: (context, value, child) => RefreshIndicator(
+            onRefresh: value,
+            child: child ?? Container(),
+          ),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [

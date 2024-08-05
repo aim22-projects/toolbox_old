@@ -1,5 +1,7 @@
+import 'dart:io';
+
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class BaseDatabaseRepository {
   BaseDatabaseRepository._internal();
@@ -29,6 +31,12 @@ class BaseDatabaseRepository {
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
+
+    // manage platform
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      databaseFactory = databaseFactoryFfi;
+    }
+
     return await openDatabase(path, version: 1);
   }
 }

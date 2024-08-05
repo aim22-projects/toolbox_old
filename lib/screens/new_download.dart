@@ -27,6 +27,10 @@ class NewDownload extends StatelessWidget {
 class NewDownloadForm extends StatelessWidget {
   const NewDownloadForm({super.key});
 
+  void onchange() {
+    print("hhhhhhheeeeee");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,10 +40,14 @@ class NewDownloadForm extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Selector<NewDownloadProvider, TextEditingController>(
-                selector: (_, provider) => provider.urlInputController,
-                builder: (context, value, child) => TextField(
-                  controller: value,
+              Selector<NewDownloadProvider, bool>(
+                selector: (_, provider) => provider.processingUrl,
+                builder: (context, value, child) =>
+                    value ? const LinearProgressIndicator() : Container(),
+              ),
+              Consumer<NewDownloadProvider>(
+                builder: (context, newDownloadProvider, child) => TextField(
+                  controller: newDownloadProvider.urlInputController,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.link),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -49,7 +57,8 @@ class NewDownloadForm extends StatelessWidget {
                   ),
                   autofocus: true,
                   keyboardType: TextInputType.multiline,
-                  maxLines: null,
+                  // maxLines: null,
+                  onChanged: newDownloadProvider.processUrl,
                 ),
               ),
               const Divider(

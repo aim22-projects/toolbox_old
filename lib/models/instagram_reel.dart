@@ -8,4 +8,9 @@ class InstagramReel {
       : videoLink = value['data']['shortcode_media']['video_url'] ?? '',
         videoThumbnail =
             value['data']['shortcode_media']['thumbnail_src'] ?? '';
+
+  Map<String, String> toJson() => {
+        'videoLink': videoLink,
+        'videoThumbnail': videoThumbnail,
+      };
 }

@@ -14,13 +14,13 @@ class InstagramService {
     var url = Uri.https('www.instagram.com', 'graphql/query', {
       'hl': 'en',
       'query_hash': 'b3055c01b4b222b8a47dc12b090e4e64',
-      'variables': {
+      'variables': jsonEncode({
         "child_comment_count": 3,
         "fetch_comment_count": 40,
         "has_threaded_comments": true,
         "parent_comment_count": 24,
-        "shortcode": "reelID"
-      }
+        "shortcode": reelID
+      })
     });
     // 1. get reel data
     var response = await http.get(url);
@@ -32,6 +32,11 @@ class InstagramService {
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
 
     // 4. return null if invalid response
+    if (responseJson['data']['shortcode_media'] == null) {
+      return null;
+    }
+
+    // 5. return null if invalid response
     if (!responseJson['data']['shortcode_media']['is_video']) {
       return null;
     }
