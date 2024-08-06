@@ -31,6 +31,8 @@ class InstagramService {
     // 3. parse response
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
 
+    print(response.body);
+
     // 4. return null if invalid response
     if (responseJson['data']['shortcode_media'] == null) {
       return null;

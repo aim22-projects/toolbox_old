@@ -16,7 +16,7 @@ class NewDownload extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('New Download'),
+          title: const Text('Download File'),
         ),
         body: const NewDownloadForm(),
       ),
@@ -27,49 +27,62 @@ class NewDownload extends StatelessWidget {
 class NewDownloadForm extends StatelessWidget {
   const NewDownloadForm({super.key});
 
-  void onchange() {
-    print("hhhhhhheeeeee");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Card.filled(
-          margin: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Selector<NewDownloadProvider, bool>(
-                selector: (_, provider) => provider.processingUrl,
-                builder: (context, value, child) =>
-                    value ? const LinearProgressIndicator() : Container(),
-              ),
-              Consumer<NewDownloadProvider>(
-                builder: (context, newDownloadProvider, child) => TextField(
+    return Consumer<NewDownloadProvider>(
+      builder: (context, newDownloadProvider, child) => Column(
+        children: [
+          ...(newDownloadProvider.fileSize != null
+              ? [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                      radius: 26,
+                      child: Icon(Icons.videocam),
+                    ),
+                  ),
+                  Center(
+                    child: Text("Size: ${newDownloadProvider.fileSize}"),
+                  ),
+                ]
+              : []),
+          Card.filled(
+            margin: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
                   controller: newDownloadProvider.urlInputController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.link),
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.link),
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
                     // filled: true,
                     hintText: 'Download url',
                     // label: Text('Download url'),
+                    suffixIcon: !newDownloadProvider.processingUrl
+                        ? null
+                        : const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
                   ),
                   autofocus: true,
                   keyboardType: TextInputType.multiline,
                   // maxLines: null,
                   onChanged: newDownloadProvider.processUrl,
                 ),
-              ),
-              const Divider(
-                height: 1,
-                indent: 16,
-                endIndent: 16,
-              ),
-              Selector<NewDownloadProvider, TextEditingController>(
-                selector: (_, provider) => provider.fileNameInputController,
-                builder: (context, value, child) => TextField(
-                  controller: value,
+                const Divider(
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                TextField(
+                  controller: newDownloadProvider.fileNameInputController,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.title),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -78,17 +91,14 @@ class NewDownloadForm extends StatelessWidget {
                     // label: Text('File name'),
                   ),
                 ),
-              ),
-              const Divider(
-                height: 1,
-                indent: 16,
-                endIndent: 16,
-              ),
-              Selector<NewDownloadProvider, TextEditingController>(
-                selector: (_, provider) =>
-                    provider.downloadLocationInputController,
-                builder: (context, value, child) => TextField(
-                  controller: value,
+                const Divider(
+                  height: 1,
+                  indent: 16,
+                  endIndent: 16,
+                ),
+                TextField(
+                  controller:
+                      newDownloadProvider.downloadLocationInputController,
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.folder),
                     border: OutlineInputBorder(borderSide: BorderSide.none),
@@ -99,34 +109,31 @@ class NewDownloadForm extends StatelessWidget {
                     // label: TextText('Download location'),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: () => GoRouter.of(context).pop(),
-                  child: const Text("Cancel"),
-                ),
-              ),
-              Selector<NewDownloadProvider, Future<void> Function()?>(
-                selector: (_, provider) => provider.addNewDownloadEvent,
-                builder: (context, value, child) => Expanded(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
                   child: TextButton(
-                    onPressed: value,
+                    onPressed: () => GoRouter.of(context).pop(),
+                    child: const Text("Cancel"),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    onPressed: newDownloadProvider.addNewDownloadEvent,
                     child: const Text("Download"),
                   ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ],
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
