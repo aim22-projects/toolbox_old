@@ -32,20 +32,18 @@ class NewDownloadForm extends StatelessWidget {
     return Consumer<NewDownloadProvider>(
       builder: (context, newDownloadProvider, child) => Column(
         children: [
-          ...(newDownloadProvider.fileSize != null
-              ? [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 26,
-                      child: Icon(Icons.videocam),
-                    ),
-                  ),
-                  Center(
-                    child: Text("Size: ${newDownloadProvider.fileSize}"),
-                  ),
-                ]
-              : []),
+          if (newDownloadProvider.fileSize != null) ...[
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                radius: 26,
+                child: Icon(Icons.videocam),
+              ),
+            ),
+            Center(
+              child: Text("Size: ${newDownloadProvider.fileSize}"),
+            ),
+          ],
           Card.filled(
             margin: const EdgeInsets.all(8),
             child: Column(
@@ -60,7 +58,7 @@ class NewDownloadForm extends StatelessWidget {
                     // filled: true,
                     hintText: 'Download url',
                     // label: Text('Download url'),
-                    suffixIcon: !newDownloadProvider.processingUrl
+                    suffixIcon: !newDownloadProvider.isLoading
                         ? null
                         : const Padding(
                             padding: EdgeInsets.all(8.0),
@@ -74,7 +72,7 @@ class NewDownloadForm extends StatelessWidget {
                   autofocus: true,
                   keyboardType: TextInputType.multiline,
                   // maxLines: null,
-                  onChanged: newDownloadProvider.processUrl,
+                  onSubmitted: newDownloadProvider.processUrl,
                 ),
                 const Divider(
                   height: 1,

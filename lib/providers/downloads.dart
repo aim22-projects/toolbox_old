@@ -15,10 +15,13 @@ class DownloadsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  DownloadsProvider({required this.context});
+  DownloadsProvider({required this.context}) {
+    init();
+  }
 
   Future<void> init() async {
     // await Future<void>.delayed(const Duration(seconds: 3));
+    // await downloadsRepository.init();
 
     // 1. fetch database values
     var result = await downloadsRepository.getDownloads();

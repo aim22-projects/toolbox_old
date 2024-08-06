@@ -11,39 +11,34 @@ class DownloadsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => DownloadsProvider(context: context),
-      builder: (context, child) => Scaffold(
+      child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Downloads'),
           actions: [
-            Selector<DownloadsProvider, Future<void> Function()>(
-              selector: (_, provider) => provider.init,
-              builder: (context, value, child) => IconButton.filledTonal(
-                onPressed: value,
+            Consumer<DownloadsProvider>(
+              builder: (context, downloadsProvider, child) =>
+                  IconButton.filledTonal(
+                onPressed: downloadsProvider.init,
                 icon: const Icon(Icons.refresh),
               ),
             ),
           ],
         ),
-        body: Selector<DownloadsProvider, Future<void> Function()>(
-          selector: (_, provider) => provider.init,
-          builder: (context, value, child) => RefreshIndicator(
-            onRefresh: value,
-            child: child ?? Container(),
-          ),
-          child: CustomScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Card.filled(
-                  margin: const EdgeInsets.all(8),
-                  child: Selector<DownloadsProvider, List<Download>>(
-                    selector: (context, provider) => provider.downloads,
-                    builder: (context, value, child) => ListView.separated(
+        body: Consumer<DownloadsProvider>(
+          builder: (context, downloadsProvider, child) => RefreshIndicator(
+            onRefresh: downloadsProvider.init,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Card.filled(
+                    margin: const EdgeInsets.all(8),
+                    child: ListView.separated(
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
                       itemBuilder: (context, index) => DownloadTile(
-                        fileName: value[index].name,
+                        fileName: downloadsProvider.downloads[index].name,
                         downloadStatus: DownloadStatus.completed,
                       ),
                       separatorBuilder: (context, index) => const Divider(
@@ -51,21 +46,18 @@ class DownloadsScreen extends StatelessWidget {
                         indent: 16,
                         endIndent: 16,
                       ),
-                      itemCount: value.length,
+                      itemCount: downloadsProvider.downloads.length,
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-        floatingActionButton:
-            Selector<DownloadsProvider, Future<void> Function()>(
-          selector: (_, provider) => provider.goToNewDownloadScreen,
-          builder: (context, value, child) => FloatingActionButton(
-            onPressed: value,
+        floatingActionButton: Consumer<DownloadsProvider>(
+          builder: (context, downloadsProvider, child) => FloatingActionButton(
+            onPressed: downloadsProvider.goToNewDownloadScreen,
             child: const Icon(Icons.add),
-            // onPressed: () => NewDownloadSheet.show(context),
           ),
         ),
       ),
