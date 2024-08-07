@@ -26,10 +26,11 @@ class DownloadsRepository {
       ${DownloadFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
       ${DownloadFields.url} TEXT NOT NULL,
       ${DownloadFields.name} TEXT NOT NULL,
-      ${DownloadFields.location} TEXT NOT NULL,
+      ${DownloadFields.downloadLocation} TEXT NOT NULL,
       ${DownloadFields.createdAt} TEXT NOT NULL,
       ${DownloadFields.downloadStatus} INTEGER NOT NULL,
-      ${DownloadFields.thumbnailUrl} TEXT
+      ${DownloadFields.thumbnailUrl} TEXT,
+      ${DownloadFields.fileSize} INTEGER NULL
     )
   ''';
 

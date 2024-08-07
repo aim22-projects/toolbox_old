@@ -11,16 +11,23 @@ enum DownloadStatus {
 
 class DownloadFields {
   // all column names
-  static final List<String> values = [id, url, name, location, createdAt];
+  static final List<String> values = [
+    id,
+    url,
+    name,
+    downloadLocation,
+    createdAt
+  ];
 
   // column names
   static const String id = '_id';
   static const String url = 'url';
   static const String name = 'name';
-  static const String location = 'location';
+  static const String downloadLocation = 'downloadLocation';
   static const String createdAt = 'createdAt';
   static const String downloadStatus = 'downloadStatus';
   static const String thumbnailUrl = 'thumbnailUrl';
+  static const String fileSize = 'fileSize';
 
   // table name
   static const String tableName = 'downloads';
@@ -30,53 +37,58 @@ class Download {
   int? id;
   String url;
   String name;
-  String location;
+  String downloadLocation;
   String createdAt;
   DownloadStatus downloadStatus;
   String thumbnailUrl;
+  int? fileSize;
 
   Download({
     this.id,
     required this.url,
     required this.name,
-    required this.location,
+    required this.downloadLocation,
     required this.createdAt,
     required this.downloadStatus,
     required this.thumbnailUrl,
+    this.fileSize,
   });
 
   Download.from(Map<String, dynamic> value)
       : id = value[DownloadFields.id],
         url = value[DownloadFields.url],
         name = value[DownloadFields.name],
-        location = value[DownloadFields.location],
+        downloadLocation = value[DownloadFields.downloadLocation],
         createdAt = value[DownloadFields.createdAt],
         downloadStatus = DownloadStatus.values.firstWhere(
             (item) => item.value == value[DownloadFields.createdAt],
             orElse: () => DownloadStatus.loading),
-        thumbnailUrl = value[DownloadFields.thumbnailUrl];
+        thumbnailUrl = value[DownloadFields.thumbnailUrl],
+        fileSize = value[DownloadFields.fileSize];
 
   factory Download.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'id': int id,
-        'url': String url,
-        'name': String name,
-        'location': String location,
-        'createdAt': String createdAt,
-        'downloadStatus': int downloadStatus,
-        'thumbnailUrl': String thumbnailUrl,
+        DownloadFields.id: int id,
+        DownloadFields.url: String url,
+        DownloadFields.name: String name,
+        DownloadFields.downloadLocation: String location,
+        DownloadFields.createdAt: String createdAt,
+        DownloadFields.downloadStatus: int downloadStatus,
+        DownloadFields.thumbnailUrl: String thumbnailUrl,
+        DownloadFields.fileSize: int fileSize,
       } =>
         Download(
             id: id,
             url: url,
             name: name,
-            location: location,
+            downloadLocation: location,
             createdAt: createdAt,
             downloadStatus: DownloadStatus.values.firstWhere(
                 (item) => item.value == downloadStatus,
                 orElse: () => DownloadStatus.loading),
-            thumbnailUrl: thumbnailUrl),
+            thumbnailUrl: thumbnailUrl,
+            fileSize: fileSize),
       _ => throw const FormatException('Failed to load album.'),
     };
   }
@@ -85,9 +97,10 @@ class Download {
         DownloadFields.id: id,
         DownloadFields.url: url,
         DownloadFields.name: name,
-        DownloadFields.location: location,
+        DownloadFields.downloadLocation: downloadLocation,
         DownloadFields.createdAt: createdAt,
         DownloadFields.downloadStatus: downloadStatus.value,
-        DownloadFields.thumbnailUrl: thumbnailUrl
+        DownloadFields.thumbnailUrl: thumbnailUrl,
+        DownloadFields.fileSize: fileSize
       };
 }

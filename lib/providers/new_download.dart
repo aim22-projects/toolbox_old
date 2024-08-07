@@ -8,15 +8,15 @@ import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/instagram_service.dart';
 
 class NewDownloadProvider extends ChangeNotifier {
+  final BuildContext context;
+  final String? downloadUrl;
+  final downloadsRepository = DownloadsRepository();
+  final instagramService = InstagramService();
   final urlInputController = TextEditingController();
   final fileNameInputController = TextEditingController();
   final downloadLocationInputController =
       TextEditingController(text: 'Downloads');
 
-  final BuildContext context;
-  final String? downloadUrl;
-  final DownloadsRepository downloadsRepository = DownloadsRepository();
-  final InstagramService instagramService = InstagramService();
   bool _isLoading = false;
   int? _fileSize;
   String? _fileType;
@@ -74,10 +74,11 @@ class NewDownloadProvider extends ChangeNotifier {
       Download(
         url: urlInputController.text,
         name: fileNameInputController.text,
-        location: downloadLocationInputController.text,
+        downloadLocation: downloadLocationInputController.text,
         createdAt: DateTime.now().toIso8601String(),
         downloadStatus: DownloadStatus.completed,
         thumbnailUrl: '',
+        fileSize: fileSize,
       ),
     );
     // ignore: use_build_context_synchronously
@@ -86,8 +87,8 @@ class NewDownloadProvider extends ChangeNotifier {
   }
 
   Future<void> processUrl() async {
-    var _d = await parseInstagramData();
-    var _ed = await fetchUrlMetadata();
+    await parseInstagramData();
+    await fetchUrlMetadata();
   }
 
   Future<void> parseInstagramData() async {
