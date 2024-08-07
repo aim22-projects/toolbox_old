@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/providers/new_download.dart';
 
 class NewDownload extends StatelessWidget {
@@ -41,7 +42,8 @@ class NewDownloadForm extends StatelessWidget {
               ),
             ),
             Center(
-              child: Text("Size: ${newDownloadProvider.fileSize}"),
+              child: Text(
+                  "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}"),
             ),
           ],
           Card.filled(
@@ -59,7 +61,10 @@ class NewDownloadForm extends StatelessWidget {
                     hintText: 'Download url',
                     // label: Text('Download url'),
                     suffixIcon: !newDownloadProvider.isLoading
-                        ? null
+                        ? IconButton(
+                            icon: const Icon(Icons.refresh),
+                            onPressed: newDownloadProvider.processUrl,
+                          )
                         : const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: SizedBox(
@@ -70,9 +75,8 @@ class NewDownloadForm extends StatelessWidget {
                           ),
                   ),
                   autofocus: true,
-                  keyboardType: TextInputType.multiline,
-                  // maxLines: null,
-                  onSubmitted: newDownloadProvider.processUrl,
+                  keyboardType: TextInputType.text,
+                  enabled: !newDownloadProvider.isLoading,
                 ),
                 const Divider(
                   height: 1,

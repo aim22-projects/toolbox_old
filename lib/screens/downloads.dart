@@ -15,15 +15,6 @@ class DownloadsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Downloads'),
-          actions: [
-            Consumer<DownloadsProvider>(
-              builder: (context, downloadsProvider, child) =>
-                  IconButton.filledTonal(
-                onPressed: downloadsProvider.init,
-                icon: const Icon(Icons.refresh),
-              ),
-            ),
-          ],
         ),
         body: Consumer<DownloadsProvider>(
           builder: (context, downloadsProvider, child) => RefreshIndicator(

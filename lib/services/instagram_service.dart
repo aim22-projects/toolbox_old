@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:toolbox/models/instagram_reel.dart';
 
@@ -11,7 +12,7 @@ class InstagramService {
   factory InstagramService() => _instance;
 
   Future<InstagramReel?> fetchReelInfo(String reelID) async {
-    var url = Uri.https('www.instagram.com', 'graphql/query', {
+    var url = Uri.https('www.instagram.com', '/graphql/query', {
       'hl': 'en',
       'query_hash': 'b3055c01b4b222b8a47dc12b090e4e64',
       'variables': jsonEncode({
@@ -31,7 +32,9 @@ class InstagramService {
     // 3. parse response
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
 
-    print(response.body);
+    // if (kDebugMode) {
+    //   print(response.body);
+    // }
 
     // 4. return null if invalid response
     if (responseJson['data']['shortcode_media'] == null) {

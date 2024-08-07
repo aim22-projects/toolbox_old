@@ -10,7 +10,8 @@ import 'package:toolbox/services/instagram_service.dart';
 class NewDownloadProvider extends ChangeNotifier {
   final urlInputController = TextEditingController();
   final fileNameInputController = TextEditingController();
-  final downloadLocationInputController = TextEditingController();
+  final downloadLocationInputController =
+      TextEditingController(text: 'Downloads');
 
   final BuildContext context;
   final String? downloadUrl;
@@ -42,7 +43,7 @@ class NewDownloadProvider extends ChangeNotifier {
   NewDownloadProvider({required this.context, this.downloadUrl}) {
     if (downloadUrl != null) {
       urlInputController.text = downloadUrl!;
-      processUrl(downloadUrl!);
+      processUrl();
     }
 
     urlInputController.addListener(notifyListeners);
@@ -84,9 +85,9 @@ class NewDownloadProvider extends ChangeNotifier {
     // if (result)
   }
 
-  Future<void> processUrl(String value) async {
-    await parseInstagramData();
-    await fetchUrlMetadata();
+  Future<void> processUrl() async {
+    var _d = await parseInstagramData();
+    var _ed = await fetchUrlMetadata();
   }
 
   Future<void> parseInstagramData() async {
@@ -104,6 +105,7 @@ class NewDownloadProvider extends ChangeNotifier {
     // String url = urlInputController.text;
     isLoading = true;
 
+    print(reelId);
     // 4. fetch data
     InstagramReel? result = await instagramService.fetchReelInfo(reelId);
 
@@ -115,28 +117,55 @@ class NewDownloadProvider extends ChangeNotifier {
 
     // 7. parse data
     urlInputController.text = result.videoLink;
+
+    //
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).clearSnackBars();
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("instagram data parsed"),
+    ));
   }
 
   Future<void> fetchUrlMetadata() async {
+    if (kDebugMode) {
+      print("fetch metadata");
+    }
     try {
       // 1. show loading
       isLoading = true;
       // 2. fetch data
-      Uri uri = Uri.dataFromString(urlInputController.text);
+      Uri uri = Uri.parse(urlInputController.text);
       var response = await http.head(uri);
       // 3. hide loading
       isLoading = false;
       // 4. check response status code
       if (response.statusCode != 200) return;
       // 5. parse headers
-      fileSize = int.tryParse(response.headers['Content-Length'] ?? '');
-      fileType = response.headers['Content-Type'];
+      fileSize = int.tryParse(response.headers['content-length'] ?? '');
+      fileType = response.headers['content-type'];
+      if (response.headers.containsKey('content-disposition')) {
+        fileNameInputController.text =
+            response.headers['content-disposition'] ?? '';
+      } else {
+        fileNameInputController.text =
+            (response.headers['content-type'] ?? '').replaceFirst('/', '.');
+      }
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("metadata parsed"),
+      ));
     } catch (error) {
       // 1. hide loading
       isLoading = false;
       if (kDebugMode) {
         print(error);
       }
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('$error'),
+      ));
     }
   }
 }
