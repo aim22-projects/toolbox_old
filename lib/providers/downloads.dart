@@ -20,6 +20,7 @@ class DownloadsProvider extends ChangeNotifier {
   }
 
   Future<void> init() async {
+    await downloadsRepository.init();
     // await Future<void>.delayed(const Duration(seconds: 3));
     // await downloadsRepository.init();
 

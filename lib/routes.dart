@@ -16,7 +16,7 @@ final appRouter = GoRouter(
       // builder: (context, state) => const DownloadsScreen(),
       builder: (context, state) {
         // print('data:${state.extra}');
-        return NewDownload(
+        return NewDownloadScreen(
           downloadUrl: state.extra as String?,
         );
       },

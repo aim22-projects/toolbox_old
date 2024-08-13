@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/base.dart';
@@ -5,7 +6,7 @@ import 'package:toolbox/repositories/database/base.dart';
 class DownloadsRepository {
   BaseDatabaseRepository baseRepository = BaseDatabaseRepository();
   Database? database;
-  bool initialized = false;
+  bool get initialized => database != null;
 
   DownloadsRepository._internal() {
     init();
@@ -14,7 +15,6 @@ class DownloadsRepository {
   Future<void> init() async {
     database = await baseRepository.database;
     await database?.execute(createTableQuery);
-    initialized = true;
   }
 
   static DownloadsRepository get _instance => DownloadsRepository._internal();
@@ -35,13 +35,27 @@ class DownloadsRepository {
   ''';
 
   Future<List<Download>?> getDownloads() async {
-    if (database == null || !initialized) return null;
-    var result = await database?.query(DownloadFields.tableName);
-    return result?.map((item) => Download.from(item)).toList();
+    try {
+      if (database == null) await init();
+
+      var result = await database?.query(DownloadFields.tableName);
+      return result?.map((item) => Download.from(item)).toList();
+    } catch (error) {
+      if (kDebugMode) print(error);
+
+      return null;
+    }
   }
 
   Future<int?> insertDownload(Download post) async {
-    if (database == null || !initialized) return null;
-    return await database?.insert(DownloadFields.tableName, post.toMap());
+    try {
+      if (database == null) await init();
+
+      return await database?.insert(DownloadFields.tableName, post.toMap());
+    } catch (error) {
+      if (kDebugMode) print(error);
+
+      return null;
+    }
   }
 }

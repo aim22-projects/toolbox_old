@@ -13,19 +13,21 @@ class BaseDatabaseRepository {
 
   Database? _database;
 
-  Future<Database?> get database async {
+  Future<Database> get database async {
     // 1. return _database if not null;
 
     if (_database != null) {
-      return _database;
+      return _database!;
     }
 
     // 2. init database, set to _database and return
-    // _database = await _initDatabase();
-    // return _database!;
+    _database = await _initDatabase();
+    return _database!;
 
     // 2. init database, set to _database and return
-    return _database = await _initDatabase();
+    // it works but facing issues in downloads screen not populating data in start
+    //
+    // return _database = await _initDatabase();
   }
 
   Future<Database> _initDatabase() async {
