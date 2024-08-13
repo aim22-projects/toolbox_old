@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/models/instagram_reel.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
@@ -12,10 +14,10 @@ class NewDownloadProvider extends ChangeNotifier {
   final String? downloadUrl;
   final downloadsRepository = DownloadsRepository();
   final instagramService = InstagramService();
+
   final urlInputController = TextEditingController();
   final fileNameInputController = TextEditingController();
-  final downloadLocationInputController =
-      TextEditingController(text: 'Downloads');
+  final downloadLocationInputController = TextEditingController();
 
   bool _isLoading = false;
   int? _fileSize;
@@ -41,16 +43,7 @@ class NewDownloadProvider extends ChangeNotifier {
   }
 
   NewDownloadProvider({required this.context, this.downloadUrl}) {
-    if (downloadUrl != null) {
-      urlInputController.text = downloadUrl!;
-      processUrl();
-    }
-
-    urlInputController.addListener(notifyListeners);
-    fileNameInputController.addListener(notifyListeners);
-    downloadLocationInputController.addListener(notifyListeners);
-
-    // urlInputController.addListener(parseInstagramData);
+    init();
   }
 
   @override
@@ -59,6 +52,23 @@ class NewDownloadProvider extends ChangeNotifier {
     fileNameInputController.dispose();
     downloadLocationInputController.dispose();
     super.dispose();
+  }
+
+  init() async {
+    // 1. parse download url shared from another app
+    if (downloadUrl != null) {
+      urlInputController.text = downloadUrl!;
+      processUrl();
+    }
+    // 2. fetch download location
+    final downloadPath = (await getDownloadsDirectory())?.path ?? '/';
+    final path = join(downloadPath, 'toolbox');
+    downloadLocationInputController.text = path;
+
+    // 3. add input change listeners
+    urlInputController.addListener(notifyListeners);
+    fileNameInputController.addListener(notifyListeners);
+    downloadLocationInputController.addListener(notifyListeners);
   }
 
   bool get isFormValid =>

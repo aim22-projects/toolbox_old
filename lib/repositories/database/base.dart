@@ -21,13 +21,13 @@ class BaseDatabaseRepository {
     }
 
     // 2. init database, set to _database and return
-    _database = await _initDatabase();
-    return _database!;
+    // _database = await _initDatabase();
+    // return _database!;
 
     // 2. init database, set to _database and return
     // it works but facing issues in downloads screen not populating data in start
     //
-    // return _database = await _initDatabase();
+    return _database = await _initDatabase();
   }
 
   Future<Database> _initDatabase() async {
