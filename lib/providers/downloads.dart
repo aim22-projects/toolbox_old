@@ -20,10 +20,11 @@ class DownloadsProvider extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    await downloadsRepository.init();
-    // await Future<void>.delayed(const Duration(seconds: 3));
-    // await downloadsRepository.init();
+    // 1. fetch records
+    fetchRecords();
+  }
 
+  Future<void> fetchRecords() async {
     // 1. fetch database values
     var result = await downloadsRepository.getDownloads();
 
