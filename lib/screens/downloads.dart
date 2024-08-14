@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/providers/downloads.dart';
-import 'package:toolbox/sheets.dart/download_details.dart';
+import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/widgets/download_tile.dart';
 
 class DownloadsScreen extends StatelessWidget {
@@ -42,25 +42,8 @@ class DownloadsScreenContent extends StatelessWidget {
                     itemBuilder: (context, index) => DownloadTile(
                       fileName: downloadsProvider.downloads[index].name,
                       downloadStatus: DownloadStatus.completed,
-                      onLongPress: () {
-                        showModalBottomSheet(
-                          context: context,
-                          useSafeArea: true,
-                          useRootNavigator: true,
-                          isScrollControlled: true,
-                          builder: (context) => DraggableScrollableSheet(
-                            initialChildSize: 0.5,
-                            maxChildSize: 1.0,
-                            expand: false,
-                            snap: true,
-                            builder: (context, scrollController) =>
-                                DownloadDetailsSheet(
-                              download: downloadsProvider.downloads[index],
-                              scrollController: scrollController,
-                            ),
-                          ),
-                        );
-                      },
+                      onLongPress: () => downloadsProvider.showDownloadDetails(
+                          downloadsProvider.downloads[index]),
                     ),
                     separatorBuilder: (context, index) => const Divider(
                       height: 1,
