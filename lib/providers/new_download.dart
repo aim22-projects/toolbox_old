@@ -85,7 +85,7 @@ class NewDownloadProvider extends ChangeNotifier {
         url: urlInputController.text,
         name: fileNameInputController.text,
         downloadLocation: downloadLocationInputController.text,
-        createdAt: DateTime.now().toIso8601String(),
+        createdAt: DateTime.now(),
         downloadStatus: DownloadStatus.completed,
         thumbnailUrl: '',
         fileSize: fileSize,
@@ -116,7 +116,9 @@ class NewDownloadProvider extends ChangeNotifier {
     // String url = urlInputController.text;
     isLoading = true;
 
-    print(reelId);
+    if (kDebugMode) {
+      print(reelId);
+    }
     // 4. fetch data
     InstagramReel? result = await instagramService.fetchReelInfo(reelId);
 

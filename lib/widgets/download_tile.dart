@@ -4,17 +4,22 @@ import 'package:toolbox/models/download.dart';
 class DownloadTile extends StatelessWidget {
   final String fileName;
   final DownloadStatus downloadStatus;
+  final bool selected;
+  final void Function()? onLongPress;
 
-  const DownloadTile({
-    super.key,
-    required this.fileName,
-    required this.downloadStatus,
-  });
+  const DownloadTile(
+      {super.key,
+      required this.fileName,
+      required this.downloadStatus,
+      this.selected = false,
+      this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       dense: true,
+      selected: selected,
+      onLongPress: onLongPress,
       leading: CircleAvatar(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Theme.of(context).primaryColorLight,

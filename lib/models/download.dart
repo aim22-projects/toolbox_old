@@ -38,7 +38,7 @@ class Download {
   String url;
   String name;
   String downloadLocation;
-  String createdAt;
+  DateTime createdAt;
   DownloadStatus downloadStatus;
   String thumbnailUrl;
   int? fileSize;
@@ -59,7 +59,7 @@ class Download {
         url = value[DownloadFields.url],
         name = value[DownloadFields.name],
         downloadLocation = value[DownloadFields.downloadLocation],
-        createdAt = value[DownloadFields.createdAt],
+        createdAt = DateTime.parse(value[DownloadFields.createdAt]),
         downloadStatus = DownloadStatus.values.firstWhere(
             (item) => item.value == value[DownloadFields.createdAt],
             orElse: () => DownloadStatus.loading),
@@ -83,7 +83,7 @@ class Download {
             url: url,
             name: name,
             downloadLocation: location,
-            createdAt: createdAt,
+            createdAt: DateTime.parse(createdAt),
             downloadStatus: DownloadStatus.values.firstWhere(
                 (item) => item.value == downloadStatus,
                 orElse: () => DownloadStatus.loading),
@@ -98,7 +98,7 @@ class Download {
         DownloadFields.url: url,
         DownloadFields.name: name,
         DownloadFields.downloadLocation: downloadLocation,
-        DownloadFields.createdAt: createdAt,
+        DownloadFields.createdAt: createdAt.toIso8601String(),
         DownloadFields.downloadStatus: downloadStatus.value,
         DownloadFields.thumbnailUrl: thumbnailUrl,
         DownloadFields.fileSize: fileSize
