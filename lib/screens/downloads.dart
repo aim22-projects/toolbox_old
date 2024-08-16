@@ -40,7 +40,8 @@ class DownloadsScreenContent extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) => DownloadTile(
-                      fileName: downloadsProvider.downloads[index].name,
+                      fileName:
+                          downloadsProvider.downloads[index].filename ?? '',
                       downloadStatus: DownloadStatus.completed,
                       onLongPress: () => downloadsProvider.showDownloadDetails(
                           downloadsProvider.downloads[index]),

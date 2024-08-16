@@ -1,11 +1,12 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download.dart';
 
 class DownloadDetailsSheet extends StatelessWidget {
-  final Download download;
+  final DownloadTask download;
   const DownloadDetailsSheet({
     super.key,
     required this.download,
@@ -49,7 +50,7 @@ class DownloadDetailsSheet extends StatelessWidget {
   }
 }
 
-List<Widget> downloadDetails(BuildContext context, Download download) {
+List<Widget> downloadDetails(BuildContext context, DownloadTask download) {
   return <Widget>[
     const Divider(
       height: 1,
@@ -61,11 +62,11 @@ List<Widget> downloadDetails(BuildContext context, Download download) {
         style: Theme.of(context).textTheme.bodySmall,
       ),
       subtitle: Text(
-        download.name,
+        download.filename ?? '-',
         style: Theme.of(context).textTheme.bodyLarge,
       ),
       onLongPress: () async {
-        await FlutterClipboard.copy(download.name);
+        await FlutterClipboard.copy(download.filename ?? '-');
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Text copied')));
@@ -83,7 +84,7 @@ List<Widget> downloadDetails(BuildContext context, Download download) {
         style: Theme.of(context).textTheme.bodySmall,
       ),
       subtitle: Text(
-        download.createdAt.toString(),
+        download.timeCreated.toString(),
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     ),
@@ -93,18 +94,18 @@ List<Widget> downloadDetails(BuildContext context, Download download) {
       indent: 16,
       endIndent: 16,
     ),
-    ListTile(
-      title: Text(
-        'Size',
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
-      subtitle: Text(
-        download.fileSize == null
-            ? '?'
-            : getFileSizeString(bytes: download.fileSize ?? 0),
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-    ),
+    // ListTile(
+    //   title: Text(
+    //     'Size',
+    //     style: Theme.of(context).textTheme.bodySmall,
+    //   ),
+    //   subtitle: Text(
+    //     download.fileSize == null
+    //         ? '?'
+    //         : getFileSizeString(bytes: download.fileSize ?? 0),
+    //     style: Theme.of(context).textTheme.bodyLarge,
+    //   ),
+    // ),
     const Divider(
       height: 0,
       thickness: 0.5,
@@ -117,11 +118,11 @@ List<Widget> downloadDetails(BuildContext context, Download download) {
         style: Theme.of(context).textTheme.bodySmall,
       ),
       subtitle: Text(
-        download.downloadLocation,
+        download.savedDir,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
       onLongPress: () async {
-        await FlutterClipboard.copy(download.downloadLocation);
+        await FlutterClipboard.copy(download.savedDir);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Text copied')));

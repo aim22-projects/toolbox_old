@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -12,7 +13,6 @@ import 'package:toolbox/services/instagram_service.dart';
 class NewDownloadProvider extends ChangeNotifier {
   final BuildContext context;
   final String? downloadUrl;
-  final downloadsRepository = DownloadsRepository();
   final instagramService = InstagramService();
 
   final urlInputController = TextEditingController();
@@ -80,17 +80,14 @@ class NewDownloadProvider extends ChangeNotifier {
       isFormValid ? addNewDownloadTask : null;
 
   Future<void> addNewDownloadTask() async {
-    await downloadsRepository.insertDownload(
-      Download(
-        url: urlInputController.text,
-        name: fileNameInputController.text,
-        downloadLocation: downloadLocationInputController.text,
-        createdAt: DateTime.now(),
-        downloadStatus: DownloadStatus.completed,
-        thumbnailUrl: '',
-        fileSize: fileSize,
-      ),
+    await FlutterDownloader.enqueue(
+      url: urlInputController.text,
+      fileName: fileNameInputController.text,
+      savedDir: downloadLocationInputController.text,
+      showNotification: true,
+      openFileFromNotification: true,
     );
+
     // ignore: use_build_context_synchronously
     GoRouter.of(context).pop();
     // if (result)
