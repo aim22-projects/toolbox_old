@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/services/sharing_service.dart';
 
@@ -12,7 +13,9 @@ Future<void> main() async {
       ignoreSsl:
           false // option: set to false to disable working with http links (default: false)
       );
-
+  await [
+    Permission.storage,
+  ].request();
   runApp(const MyApp());
 }
 
