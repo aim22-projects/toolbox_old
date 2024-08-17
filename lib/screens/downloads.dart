@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/providers/downloads.dart';
-import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/widgets/download_tile.dart';
 
 class DownloadsScreen extends StatelessWidget {

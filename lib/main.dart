@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:toolbox/repositories/database/base.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/services/sharing_service.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await BaseDatabaseRepository().initDatabase();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

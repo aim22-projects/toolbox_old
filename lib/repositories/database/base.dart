@@ -27,10 +27,10 @@ class BaseDatabaseRepository {
     // 2. init database, set to _database and return
     // it works but facing issues in downloads screen not populating data in start
     //
-    return _database = await _initDatabase();
+    return _database = await initDatabase();
   }
 
-  Future<Database> _initDatabase() async {
+  Future<Database> initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
 
