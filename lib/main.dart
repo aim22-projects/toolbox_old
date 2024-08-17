@@ -8,14 +8,16 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await FlutterDownloader.initialize(
-      debug:
-          true, // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl:
-          false // option: set to false to disable working with http links (default: false)
-      );
-  await [
-    Permission.storage,
-  ].request();
+    debug:
+        true, // optional: set to false to disable printing logs to console (default: true)
+    ignoreSsl:
+        false, // option: set to false to disable working with http links (default: false)
+  );
+
+  var status = await Permission.manageExternalStorage.request();
+  if (!status.isGranted) {
+    openAppSettings();
+  }
   runApp(const MyApp());
 }
 
