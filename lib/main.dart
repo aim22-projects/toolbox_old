@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:toolbox/repositories/database/base.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/services/sharing_service.dart';
@@ -7,6 +8,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await BaseDatabaseRepository().initDatabase();
+
+  var status = await Permission.manageExternalStorage.request();
+  if (!status.isGranted) {
+    openAppSettings();
+  }
 
   runApp(const MyApp());
 }
