@@ -5,7 +5,7 @@ import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download.dart';
 
 class DownloadDetailsSheet extends StatelessWidget {
-  final Download download;
+  final DownloadTask download;
   const DownloadDetailsSheet({
     super.key,
     required this.download,
@@ -49,7 +49,7 @@ class DownloadDetailsSheet extends StatelessWidget {
   }
 }
 
-List<Widget> downloadDetails(BuildContext context, Download download) {
+List<Widget> downloadDetails(BuildContext context, DownloadTask download) {
   return <Widget>[
     const Divider(
       height: 1,

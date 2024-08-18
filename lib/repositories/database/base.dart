@@ -4,33 +4,19 @@ import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class BaseDatabaseRepository {
-  BaseDatabaseRepository._internal();
+  BaseDatabaseRepository._();
 
-  static BaseDatabaseRepository get _instance =>
-      BaseDatabaseRepository._internal();
+  static Database? _database;
 
-  factory BaseDatabaseRepository() => _instance;
-
-  Database? _database;
-
-  Future<Database> get database async {
+  static Future<Database> get database async {
     // 1. return _database if not null;
-
-    if (_database != null) {
-      return _database!;
-    }
+    if (_database != null) return _database!;
 
     // 2. init database, set to _database and return
-    // _database = await _initDatabase();
-    // return _database!;
-
-    // 2. init database, set to _database and return
-    // it works but facing issues in downloads screen not populating data in start
-    //
-    return _database = await initDatabase();
+    return _database = await _initDatabase();
   }
 
-  Future<Database> initDatabase() async {
+  static Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
 
@@ -40,5 +26,12 @@ class BaseDatabaseRepository {
     }
 
     return await openDatabase(path, version: 1);
+  }
+
+  static Future<void> closeDatabase() async {
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
   }
 }

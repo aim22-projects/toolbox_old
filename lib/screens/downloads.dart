@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/widgets/download_tile.dart';
 
@@ -10,7 +10,7 @@ class DownloadsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DownloadsProvider(context: context),
+      create: (context) => DownloadTasksProvider(context: context),
       builder: (context, child) => const DownloadsScreenContent(),
     );
   }
@@ -21,7 +21,7 @@ class DownloadsScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<DownloadsProvider>(
+    return Consumer<DownloadTasksProvider>(
       builder: (context, downloadsProvider, child) => Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
