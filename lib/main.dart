@@ -7,12 +7,7 @@ import 'package:toolbox/services/sharing_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await BaseDatabaseRepository().initDatabase();
-
-  var status = await Permission.manageExternalStorage.request();
-  if (!status.isGranted) {
-    openAppSettings();
-  }
+  await BaseDatabaseRepository.database;
 
   runApp(const MyApp());
 }
@@ -28,7 +23,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    SharingService.instance.listen((value) {
+
+    init();
+
+    SharingService.instance.listen((value) async {
       // 1. return if data is null
       if (value == null || value.isEmpty) return;
 
@@ -38,7 +36,24 @@ class _MyAppState extends State<MyApp> {
       // GoRouter.of(context).go('/downloads/new');
       appRouter.push('/downloads/new', extra: value.first.path);
     });
-    // appRouter.go('/downloads/new');
+  }
+
+  init() async {
+    var status = await Permission.manageExternalStorage.request().isGranted;
+    if (status) return;
+
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Storage access is required to save the downloaded files.',
+        ),
+        action: SnackBarAction(
+          label: 'Grant',
+          onPressed: openAppSettings,
+        ),
+      ),
+    );
   }
 
   @override

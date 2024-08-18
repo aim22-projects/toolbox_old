@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/sheets/download_details.dart';
 
-class DownloadsProvider extends ChangeNotifier {
-  List<Download> _downloads = [];
-  final DownloadsRepository downloadsRepository = DownloadsRepository();
+class DownloadTasksProvider extends ChangeNotifier {
+  List<DownloadTask> _downloads = [];
   final BuildContext context;
 
-  List<Download> get downloads => _downloads;
+  List<DownloadTask> get downloads => _downloads;
 
-  set downloads(List<Download> value) {
+  set downloads(List<DownloadTask> value) {
     _downloads = value;
     notifyListeners();
   }
 
-  DownloadsProvider({required this.context}) {
+  DownloadTasksProvider({required this.context}) {
     init();
   }
 
@@ -28,10 +26,7 @@ class DownloadsProvider extends ChangeNotifier {
 
   Future<void> fetchRecords() async {
     // 1. fetch database values
-    var result = await downloadsRepository.getDownloads();
-
-    // 2. result
-    downloads = result ?? [];
+    downloads = await DownloadsRepository.getDownloads() ?? [];
   }
 
   Future<void> goToNewDownloadScreen() async {
@@ -39,7 +34,7 @@ class DownloadsProvider extends ChangeNotifier {
     init();
   }
 
-  Future showDownloadDetails(Download downloadTask) {
+  Future showDownloadDetails(DownloadTask downloadTask) {
     return showModalBottomSheet(
       context: context,
       useSafeArea: true,

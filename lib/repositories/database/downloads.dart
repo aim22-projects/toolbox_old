@@ -1,25 +1,18 @@
 import 'package:flutter/foundation.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:toolbox/constants/download_fields.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/base.dart';
 
 class DownloadsRepository {
-  BaseDatabaseRepository baseRepository = BaseDatabaseRepository();
-  Database? database;
-  bool get initialized => database != null;
+  static bool? _initialized;
 
-  DownloadsRepository._internal() {
-    init();
+  DownloadsRepository._();
+
+  static Future<void> get initialized async {
+    if (_initialized != null && _initialized!) return;
+    final db = await BaseDatabaseRepository.database;
+    await db.execute(createTableQuery);
   }
-
-  Future<void> init() async {
-    database = await baseRepository.database;
-    await database?.execute(createTableQuery);
-  }
-
-  static DownloadsRepository get _instance => DownloadsRepository._internal();
-
-  factory DownloadsRepository() => _instance;
 
   static const String createTableQuery = '''
     CREATE TABLE IF NOT EXISTS ${DownloadFields.tableName} (
@@ -34,12 +27,13 @@ class DownloadsRepository {
     )
   ''';
 
-  Future<List<Download>?> getDownloads() async {
+  static Future<List<DownloadTask>?> getDownloads() async {
     try {
-      if (database == null) await init();
+      await initialized;
+      final db = await BaseDatabaseRepository.database;
 
-      var result = await database?.query(DownloadFields.tableName);
-      return result?.map((item) => Download.from(item)).toList();
+      var result = await db.query(DownloadFields.tableName);
+      return result.map((item) => DownloadTask.fromMap(item)).toList();
     } catch (error) {
       if (kDebugMode) print(error);
 
@@ -47,11 +41,12 @@ class DownloadsRepository {
     }
   }
 
-  Future<int?> insertDownload(Download post) async {
+  static Future<int?> insertDownload(DownloadTask post) async {
     try {
-      if (database == null) await init();
+      await initialized;
+      final db = await BaseDatabaseRepository.database;
 
-      return await database?.insert(DownloadFields.tableName, post.toMap());
+      return await db.insert(DownloadFields.tableName, post.toMap());
     } catch (error) {
       if (kDebugMode) print(error);
 

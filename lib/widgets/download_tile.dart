@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/enums/download_status.dart';
 
 class DownloadTile extends StatelessWidget {
   final String fileName;
