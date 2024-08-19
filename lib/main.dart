@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:toolbox/repositories/database/base.dart';
 import 'package:toolbox/routes.dart';
@@ -78,6 +79,8 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       theme: ThemeData.light(
         useMaterial3: true,
+      ).copyWith(
+        textTheme: GoogleFonts.latoTextTheme(),
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
@@ -89,6 +92,7 @@ class _MyAppState extends State<MyApp> {
           elevation: 0,
         ),
         scaffoldBackgroundColor: Colors.black,
+        textTheme: GoogleFonts.latoTextTheme(),
       ),
       themeMode: ThemeMode.dark,
       routerConfig: appRouter,
