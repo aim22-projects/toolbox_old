@@ -20,7 +20,7 @@ class DownloadsRepository {
       ${DownloadFields.url} TEXT NOT NULL,
       ${DownloadFields.name} TEXT NOT NULL,
       ${DownloadFields.downloadLocation} TEXT NOT NULL,
-      ${DownloadFields.createdAt} TEXT NOT NULL,
+      ${DownloadFields.createdAt} INTEGER NOT NULL,
       ${DownloadFields.downloadStatus} INTEGER NOT NULL,
       ${DownloadFields.thumbnailUrl} TEXT,
       ${DownloadFields.fileSize} INTEGER NULL
