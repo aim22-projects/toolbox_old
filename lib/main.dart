@@ -80,7 +80,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light(
         useMaterial3: true,
       ).copyWith(
-        textTheme: GoogleFonts.latoTextTheme(),
+        textTheme: GoogleFonts.latoTextTheme(ThemeData.light().textTheme),
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
           elevation: 0,
         ),
         scaffoldBackgroundColor: Colors.black,
-        textTheme: GoogleFonts.latoTextTheme(),
+        textTheme: GoogleFonts.latoTextTheme(ThemeData.dark().textTheme),
       ),
       themeMode: ThemeMode.dark,
       routerConfig: appRouter,
