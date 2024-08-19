@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:toolbox/repositories/database/base.dart';
@@ -25,7 +27,14 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     init();
+  }
 
+  init() async {
+    // manage platform
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      return;
+    }
+    // 1. start listening shared data
     SharingService.instance.listen((value) async {
       // 1. return if data is null
       if (value == null || value.isEmpty) return;
@@ -36,12 +45,12 @@ class _MyAppState extends State<MyApp> {
       // GoRouter.of(context).go('/downloads/new');
       appRouter.push('/downloads/new', extra: value.first.path);
     });
-  }
 
-  init() async {
+    // 2. request storage permission
     var status = await Permission.manageExternalStorage.request().isGranted;
     if (status) return;
 
+    // 3. show snackbar if storage permission is not granted
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -70,6 +79,18 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light(
         useMaterial3: true,
       ),
+      darkTheme: ThemeData.dark().copyWith(
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
+        cardTheme: CardTheme(
+          color: Colors.grey[900], // Dark card background
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 0,
+        ),
+        scaffoldBackgroundColor: Colors.black,
+      ),
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }

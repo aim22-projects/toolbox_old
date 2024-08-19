@@ -17,13 +17,13 @@ class BaseDatabaseRepository {
   }
 
   static Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'app_database.db');
-
     // manage platform
     if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
       databaseFactory = databaseFactoryFfi;
     }
+
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'app_database.db');
 
     return await openDatabase(path, version: 1);
   }
