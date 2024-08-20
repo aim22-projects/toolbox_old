@@ -33,16 +33,4 @@ class DownloadTasksProvider extends ChangeNotifier {
     await GoRouter.of(context).push('/downloads/new');
     init();
   }
-
-  Future showDownloadDetails(DownloadTask downloadTask) {
-    return showModalBottomSheet(
-      context: context,
-      useSafeArea: true,
-      useRootNavigator: true,
-      isScrollControlled: true,
-      builder: (context) => DownloadDetailsSheet(
-        download: downloadTask,
-      ),
-    );
-  }
 }

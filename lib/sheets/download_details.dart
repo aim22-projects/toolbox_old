@@ -5,6 +5,19 @@ import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download.dart';
 
 class DownloadDetailsSheet extends StatelessWidget {
+  static void show(BuildContext context, DownloadTask downloadTask) {
+    showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      builder: (context) => DownloadDetailsSheet(
+        download: downloadTask,
+      ),
+    );
+  }
+
   final DownloadTask download;
   const DownloadDetailsSheet({
     super.key,
