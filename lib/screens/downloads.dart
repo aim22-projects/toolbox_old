@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/widgets/download_tile.dart';
@@ -40,12 +39,12 @@ class DownloadsScreenContent extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) => DownloadTile(
-                      fileName: downloadsProvider.downloads[index].name,
-                      downloadStatus: DownloadStatus.completed,
+                      downloadTask: downloadsProvider.downloads[index],
                       onLongPress: () => DownloadDetailsSheet.show(
                         context,
                         downloadsProvider.downloads[index],
                       ),
+                      selected: false,
                     ),
                     separatorBuilder: (context, index) => const Divider(
                       height: 1,
