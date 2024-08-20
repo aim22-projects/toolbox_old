@@ -11,6 +11,7 @@ class DownloadDetailsSheet extends StatelessWidget {
       useSafeArea: true,
       useRootNavigator: true,
       isScrollControlled: true,
+      backgroundColor: Theme.of(context).dialogBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       builder: (context) => DownloadDetailsSheet(
         download: downloadTask,
@@ -34,6 +35,7 @@ class DownloadDetailsSheet extends StatelessWidget {
       builder: (context, scrollController) => ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         child: Scaffold(
+          backgroundColor: Theme.of(context).dialogBackgroundColor,
           body: CustomScrollView(
             controller: scrollController,
             shrinkWrap: true,
@@ -50,6 +52,7 @@ class DownloadDetailsSheet extends StatelessWidget {
                 elevation: 1,
                 pinned: true,
                 floating: false,
+                backgroundColor: Theme.of(context).dialogBackgroundColor,
               ),
               SliverList.list(
                 children: downloadDetails(context, download),
