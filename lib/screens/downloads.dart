@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/sheets/download_details.dart';
+import 'package:toolbox/sheets/new_download.dart';
 import 'package:toolbox/widgets/download_tile.dart';
 
 class DownloadsScreen extends StatelessWidget {
@@ -59,7 +60,11 @@ class DownloadsScreenContent extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: downloadsProvider.goToNewDownloadScreen,
+          // onPressed: downloadsProvider.goToNewDownloadScreen,
+          onPressed: () async {
+            await NewDownloadSheet.show(context);
+            await downloadsProvider.fetchRecords();
+          },
           child: const Icon(Icons.add),
         ),
       ),

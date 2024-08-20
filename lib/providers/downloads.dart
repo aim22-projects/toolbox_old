@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
-import 'package:toolbox/sheets/download_details.dart';
 
 class DownloadTasksProvider extends ChangeNotifier {
   List<DownloadTask> _downloads = [];
