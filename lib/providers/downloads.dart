@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/models/download.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
+import 'package:toolbox/services/sharing_service.dart';
+import 'package:toolbox/sheets/new_download.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DownloadTasksProvider extends ChangeNotifier {
@@ -19,9 +23,54 @@ class DownloadTasksProvider extends ChangeNotifier {
     init();
   }
 
-  Future<void> init() async {
-    // 1. fetch records
+  @override
+  void dispose() {
+    SharingService.instance.dispose();
+    super.dispose();
+  }
+
+  init() async {
+    // 1. validate platform
+    if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+      return;
+    }
+
+    // 2. fetch records
     fetchRecords();
+
+    // 3. start listening to shared data
+    SharingService.instance.listen((value) async {
+      // 1. return if data is null
+      if (value == null || value.isEmpty) return;
+
+      // 2. check mime type
+      if (value.first.mimeType != 'text/plain') return;
+
+      // GoRouter.of(context).go('/downloads/new');
+
+      await NewDownloadSheet.show(context);
+
+      // GoRouter.of(context).push('/downloads/new', extra: value.first.path);
+    });
+
+    // 2. request storage permission
+    // currently disabled as app will directly navigate to storage settings
+    // var status = await Permission.manageExternalStorage.request().isGranted;
+    // if (status) return;
+
+    // 3. show snackbar if storage permission is not granted
+    // ignore: use_build_context_synchronously
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(
+    //     content: Text(
+    //       'Storage access is required to save the downloaded files.',
+    //     ),
+    //     action: SnackBarAction(
+    //       label: 'Grant',
+    //       onPressed: openAppSettings,
+    //     ),
+    //   ),
+    // );
   }
 
   Future<void> fetchRecords() async {

@@ -29,7 +29,7 @@ class DownloadsScreenContent extends StatelessWidget {
           title: const Text('Downloads'),
         ),
         body: RefreshIndicator(
-          onRefresh: downloadsProvider.init,
+          onRefresh: downloadsProvider.fetchRecords,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
