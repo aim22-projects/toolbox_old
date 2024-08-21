@@ -48,7 +48,7 @@ class DownloadTasksProvider extends ChangeNotifier {
 
       // GoRouter.of(context).go('/downloads/new');
 
-      await NewDownloadSheet.show(context);
+      await NewDownloadSheet.show(context, value.first.path);
 
       // GoRouter.of(context).push('/downloads/new', extra: value.first.path);
     });

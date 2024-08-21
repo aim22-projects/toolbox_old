@@ -5,6 +5,12 @@ import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download.dart';
 
 class DownloadDetailsSheet extends StatelessWidget {
+  final DownloadTask download;
+  const DownloadDetailsSheet({
+    super.key,
+    required this.download,
+  });
+
   static void show(BuildContext context, DownloadTask downloadTask) {
     showModalBottomSheet(
       context: context,
@@ -18,12 +24,6 @@ class DownloadDetailsSheet extends StatelessWidget {
       ),
     );
   }
-
-  final DownloadTask download;
-  const DownloadDetailsSheet({
-    super.key,
-    required this.download,
-  });
 
   @override
   Widget build(BuildContext context) {

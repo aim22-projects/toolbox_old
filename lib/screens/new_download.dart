@@ -94,24 +94,24 @@ class NewDownloadScreenContent extends StatelessWidget {
                       // label: Text('File name'),
                     ),
                   ),
-                  const Divider(
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                  ),
-                  TextField(
-                    controller:
-                        newDownloadProvider.downloadLocationInputController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.folder),
-                      border: OutlineInputBorder(borderSide: BorderSide.none),
-                      // filled: true,
-                      hintMaxLines: 1,
-                      helperMaxLines: 1,
-                      hintText: 'Download location',
-                      // label: TextText('Download location'),
-                    ),
-                  ),
+                  // const Divider(
+                  //   height: 1,
+                  //   indent: 16,
+                  //   endIndent: 16,
+                  // ),
+                  // TextField(
+                  //   controller:
+                  //       newDownloadProvider.downloadLocationInputController,
+                  //   decoration: const InputDecoration(
+                  //     prefixIcon: Icon(Icons.folder),
+                  //     border: OutlineInputBorder(borderSide: BorderSide.none),
+                  //     // filled: true,
+                  //     hintMaxLines: 1,
+                  //     helperMaxLines: 1,
+                  //     hintText: 'Download location',
+                  //     // label: TextText('Download location'),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
