@@ -65,7 +65,7 @@ class DownloadsScreenContent extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           // onPressed: downloadsProvider.goToNewDownloadScreen,
           onPressed: () async {
-            await NewDownloadSheet.show(context);
+            await NewDownloadSheet.show(context, null);
             await downloadsProvider.fetchRecords();
           },
           child: const Icon(Icons.add),
