@@ -91,7 +91,7 @@ class DownloadTasksProvider extends ChangeNotifier {
         throw "No default app found to open link";
       }
 
-      if (!await launchUrl(uri)) {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
         throw "Unknown error while open link";
       }
     } catch (e) {
