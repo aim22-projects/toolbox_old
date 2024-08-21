@@ -43,11 +43,8 @@ class NewDownloadSheetContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<NewDownloadProvider>(
-      builder: (context, newDownloadProvider, child) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: DraggableScrollableSheet(
+      builder: (context, newDownloadProvider, child) =>
+         DraggableScrollableSheet(
           initialChildSize: 0.5,
           maxChildSize: 1.0,
           expand: false,
@@ -197,7 +194,7 @@ class NewDownloadSheetContent extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }
