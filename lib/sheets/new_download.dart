@@ -44,7 +44,9 @@ class NewDownloadSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<NewDownloadProvider>(
       builder: (context, newDownloadProvider, child) => Padding(
-        padding: MediaQuery.of(context).viewInsets,
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: DraggableScrollableSheet(
           initialChildSize: 0.5,
           maxChildSize: 1.0,
@@ -72,120 +74,122 @@ class NewDownloadSheetContent extends StatelessWidget {
                     floating: false,
                     backgroundColor: Theme.of(context).dialogBackgroundColor,
                   ),
-                  SliverList.list(
-                    children: [
-                      if (newDownloadProvider.fileSize != null) ...[
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 26,
-                            child: Icon(Icons.videocam),
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        if (newDownloadProvider.fileSize != null) ...[
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              radius: 26,
+                              child: Icon(Icons.videocam),
+                            ),
                           ),
-                        ),
-                        Center(
-                          child: Text(
-                            "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}",
+                          Center(
+                            child: Text(
+                              "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}",
+                            ),
                           ),
-                        ),
-                      ],
-                      Card.filled(
-                        margin: const EdgeInsets.all(8),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller:
-                                  newDownloadProvider.urlInputController,
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.link),
-                                border: const OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                // filled: true,
-                                hintText: 'Download url',
-                                // label: Text('Download url'),
-                                suffixIcon: !newDownloadProvider.isLoading
-                                    ? IconButton(
-                                        icon: const Icon(Icons.refresh),
-                                        onPressed:
-                                            newDownloadProvider.processUrl,
-                                      )
-                                    : const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          height: 16,
-                                          width: 16,
-                                          child: Center(
-                                              child:
-                                                  CircularProgressIndicator()),
+                        ],
+                        Card.filled(
+                          margin: const EdgeInsets.all(8),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller:
+                                    newDownloadProvider.urlInputController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.link),
+                                  border: const OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // filled: true,
+                                  hintText: 'Download url',
+                                  // label: Text('Download url'),
+                                  suffixIcon: !newDownloadProvider.isLoading
+                                      ? IconButton(
+                                          icon: const Icon(Icons.refresh),
+                                          onPressed:
+                                              newDownloadProvider.processUrl,
+                                        )
+                                      : const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: SizedBox(
+                                            height: 16,
+                                            width: 16,
+                                            child: Center(
+                                                child:
+                                                    CircularProgressIndicator()),
+                                          ),
                                         ),
-                                      ),
+                                ),
+                                autofocus: true,
+                                keyboardType: TextInputType.text,
+                                enabled: !newDownloadProvider.isLoading,
                               ),
-                              autofocus: true,
-                              keyboardType: TextInputType.text,
-                              enabled: !newDownloadProvider.isLoading,
-                            ),
-                            const Divider(
-                              height: 1,
-                              indent: 16,
-                              endIndent: 16,
-                            ),
-                            TextField(
-                              controller:
-                                  newDownloadProvider.fileNameInputController,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.title),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none),
-                                // filled: true,
-                                hintText: 'File name',
-                                // label: Text('File name'),
+                              const Divider(
+                                height: 1,
+                                indent: 16,
+                                endIndent: 16,
                               ),
-                            ),
-                            // const Divider(
-                            //   height: 1,
-                            //   indent: 16,
-                            //   endIndent: 16,
-                            // ),
-                            // TextField(
-                            //   controller: newDownloadProvider
-                            //       .downloadLocationInputController,
-                            //   decoration: const InputDecoration(
-                            //     prefixIcon: Icon(Icons.folder),
-                            //     border: OutlineInputBorder(
-                            //         borderSide: BorderSide.none),
-                            //     // filled: true,
-                            //     hintMaxLines: 1,
-                            //     helperMaxLines: 1,
-                            //     hintText: 'Download location',
-                            //     // label: TextText('Download location'),
-                            //   ),
-                            // ),
-                          ],
+                              TextField(
+                                controller:
+                                    newDownloadProvider.fileNameInputController,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.title),
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide.none),
+                                  // filled: true,
+                                  hintText: 'File name',
+                                  // label: Text('File name'),
+                                ),
+                              ),
+                              // const Divider(
+                              //   height: 1,
+                              //   indent: 16,
+                              //   endIndent: 16,
+                              // ),
+                              // TextField(
+                              //   controller: newDownloadProvider
+                              //       .downloadLocationInputController,
+                              //   decoration: const InputDecoration(
+                              //     prefixIcon: Icon(Icons.folder),
+                              //     border: OutlineInputBorder(
+                              //         borderSide: BorderSide.none),
+                              //     // filled: true,
+                              //     hintMaxLines: 1,
+                              //     helperMaxLines: 1,
+                              //     hintText: 'Download location',
+                              //     // label: TextText('Download location'),
+                              //   ),
+                              // ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Expanded(
-                              child: TextButton(
-                                onPressed: () => GoRouter.of(context).pop(),
-                                child: const Text("Cancel"),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () => GoRouter.of(context).pop(),
+                                  child: const Text("Cancel"),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: TextButton(
-                                onPressed:
-                                    newDownloadProvider.addNewDownloadEvent,
-                                child: const Text("Download"),
+                              Expanded(
+                                child: TextButton(
+                                  onPressed:
+                                      newDownloadProvider.addNewDownloadEvent,
+                                  child: const Text("Download"),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
