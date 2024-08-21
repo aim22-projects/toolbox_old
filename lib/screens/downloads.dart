@@ -41,11 +41,14 @@ class DownloadsScreenContent extends StatelessWidget {
                     physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) => DownloadTile(
                       downloadTask: downloadsProvider.downloads[index],
+                      selected: false,
+                      onTap: () => downloadsProvider.openFile(
+                        downloadsProvider.downloads[index],
+                      ),
                       onLongPress: () => DownloadDetailsSheet.show(
                         context,
                         downloadsProvider.downloads[index],
                       ),
-                      selected: false,
                     ),
                     separatorBuilder: (context, index) => const Divider(
                       height: 1,

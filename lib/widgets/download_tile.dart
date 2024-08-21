@@ -7,12 +7,15 @@ class DownloadTile extends StatelessWidget {
   final DownloadTask downloadTask;
   final bool selected;
   final void Function()? onLongPress;
+  final void Function()? onTap;
 
-  const DownloadTile(
-      {super.key,
-      this.onLongPress,
-      required this.downloadTask,
-      required this.selected});
+  const DownloadTile({
+    super.key,
+    this.onLongPress,
+    this.onTap,
+    required this.downloadTask,
+    required this.selected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,7 @@ class DownloadTile extends StatelessWidget {
       dense: true,
       selected: selected,
       onLongPress: onLongPress,
+      onTap: onTap,
       leading: CircleAvatar(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Theme.of(context).primaryColorLight,
@@ -45,7 +49,6 @@ class DownloadTile extends StatelessWidget {
         start: 16.0,
         end: 16.0,
       ),
-      onTap: () => {},
     );
   }
 }
