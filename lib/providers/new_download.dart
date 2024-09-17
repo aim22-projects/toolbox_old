@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toolbox/enums/download_status.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/instagram_reel.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/instagram_service.dart';

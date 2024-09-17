@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:toolbox/constants/download_fields.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/base.dart';
 
 class DownloadsRepository {

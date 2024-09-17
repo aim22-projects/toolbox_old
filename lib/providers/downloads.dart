@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/sharing_service.dart';
 import 'package:toolbox/sheets/new_download.dart';
@@ -49,6 +49,8 @@ class DownloadTasksProvider extends ChangeNotifier {
       // GoRouter.of(context).go('/downloads/new');
 
       await NewDownloadSheet.show(context, value.first.path);
+
+      fetchRecords();
 
       // GoRouter.of(context).push('/downloads/new', extra: value.first.path);
     });

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/extensions/file.dart';
-import 'package:toolbox/models/download.dart';
+import 'package:toolbox/models/download_task.dart';
 
 class DownloadTile extends StatelessWidget {
   final DownloadTask downloadTask;

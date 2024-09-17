@@ -12,7 +12,7 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       name: 'new_download',
-      path: '/downloads/new',
+      path: '/new',
       // builder: (context, state) => const DownloadsScreen(),
       builder: (context, state) {
         // print('data:${state.extra}');
