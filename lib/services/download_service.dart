@@ -11,9 +11,9 @@ class DownloadService {
 
   factory DownloadService() => _instance;
 
-  Future<void> downloadFile(
+  static Future<void> downloadFile(
     DownloadTask task,
-    Function(double) onProgress,
+    Function(double, DownloadTask) onProgress,
   ) async {
     var request = http.Request('GET', Uri.parse(task.url));
 
@@ -32,7 +32,7 @@ class DownloadService {
     response.stream.listen(
       (List<int> chunk) {
         receivedBytes += chunk.length;
-        onProgress(receivedBytes / totalBytes * 100);
+        onProgress(receivedBytes / totalBytes * 100, task);
         sink.add(chunk);
       },
       onDone: () async {

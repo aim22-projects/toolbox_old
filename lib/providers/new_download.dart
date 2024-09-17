@@ -8,6 +8,7 @@ import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/instagram_reel.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
+import 'package:toolbox/services/download_service.dart';
 import 'package:toolbox/services/instagram_service.dart';
 
 class NewDownloadProvider extends ChangeNotifier {
@@ -80,17 +81,29 @@ class NewDownloadProvider extends ChangeNotifier {
       isFormValid ? addNewDownloadTask : null;
 
   Future<void> addNewDownloadTask() async {
-    await DownloadsRepository.insertTask(
-      DownloadTask(
-        url: urlInputController.text,
-        name: fileNameInputController.text,
-        downloadLocation: downloadLocationInputController.text,
-        createdAt: DateTime.now(),
-        downloadStatus: DownloadStatus.completed,
-        thumbnailUrl: '',
-        fileSize: fileSize,
-      ),
+    var task = DownloadTask(
+      url: urlInputController.text,
+      name: fileNameInputController.text,
+      downloadLocation: downloadLocationInputController.text,
+      createdAt: DateTime.now(),
+      downloadStatus: DownloadStatus.completed,
+      thumbnailUrl: '',
+      fileSize: fileSize,
     );
+    await DownloadsRepository.insertTask(task);
+    // try {
+    // await DownloadService.downloadFile(task, (progress, task) {
+    // task.downloadStatus = DownloadStatus.inProcess;
+    // DownloadsRepository.updateTask(task);
+    // _tasks[fileName] = task.copyWith(progress: progress);
+    // notifyListeners();
+    // });
+    // _tasks[fileName] = task.copyWith(isDownloading: false);
+    // } catch (e) {
+    // _tasks[fileName] =
+    // task.copyWith(isDownloading: false, errorMessage: e.toString());
+    // }
+    notifyListeners();
     // ignore: use_build_context_synchronously
     GoRouter.of(context).pop();
     // if (result)
