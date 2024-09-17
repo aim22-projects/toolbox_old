@@ -77,7 +77,7 @@ class DownloadTasksProvider extends ChangeNotifier {
 
   Future<void> fetchRecords() async {
     // 1. fetch database values
-    downloads = await DownloadsRepository.getDownloads() ?? [];
+    downloads = await DownloadsRepository.getTasks() ?? [];
   }
 
   Future<void> goToNewDownloadScreen() async {

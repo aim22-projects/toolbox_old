@@ -80,7 +80,7 @@ class NewDownloadProvider extends ChangeNotifier {
       isFormValid ? addNewDownloadTask : null;
 
   Future<void> addNewDownloadTask() async {
-    await DownloadsRepository.insertDownload(
+    await DownloadsRepository.insertTask(
       DownloadTask(
         url: urlInputController.text,
         name: fileNameInputController.text,

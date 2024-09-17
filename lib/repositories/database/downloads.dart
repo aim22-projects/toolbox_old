@@ -27,7 +27,7 @@ class DownloadsRepository {
     )
   ''';
 
-  static Future<List<DownloadTask>?> getDownloads() async {
+  static Future<List<DownloadTask>?> getTasks() async {
     try {
       await initialized;
       final db = await BaseDatabaseRepository.database;
@@ -41,12 +41,47 @@ class DownloadsRepository {
     }
   }
 
-  static Future<int?> insertDownload(DownloadTask post) async {
+  static Future<int?> insertTask(DownloadTask post) async {
     try {
       await initialized;
       final db = await BaseDatabaseRepository.database;
 
       return await db.insert(DownloadFields.tableName, post.toMap());
+    } catch (error) {
+      if (kDebugMode) print(error);
+
+      return null;
+    }
+  }
+
+  static Future<int?> updateTask(DownloadTask task) async {
+    try {
+      await initialized;
+      final db = await BaseDatabaseRepository.database;
+
+      return await db.update(
+        DownloadFields.tableName,
+        task.toMap(),
+        where: "id = ?",
+        whereArgs: [task.id],
+      );
+    } catch (error) {
+      if (kDebugMode) print(error);
+
+      return null;
+    }
+  }
+
+  static Future<int?> deleteTask(DownloadTask task) async {
+    try {
+      await initialized;
+      final db = await BaseDatabaseRepository.database;
+
+      return await db.delete(
+        DownloadFields.tableName,
+        where: "id = ?",
+        whereArgs: [task.id],
+      );
     } catch (error) {
       if (kDebugMode) print(error);
 
