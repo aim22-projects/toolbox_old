@@ -26,7 +26,8 @@ class DownloadsRepository {
       ${DownloadFields.createdAt} INTEGER NOT NULL,
       ${DownloadFields.downloadStatus} INTEGER NOT NULL,
       ${DownloadFields.thumbnailUrl} TEXT,
-      ${DownloadFields.fileSize} INTEGER NULL
+      ${DownloadFields.fileSize} INTEGER NULL,
+      ${DownloadFields.downloadedSize} INTEGER NULL
     )
   ''';
 

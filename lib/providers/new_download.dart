@@ -16,7 +16,9 @@ class NewDownloadProvider extends ChangeNotifier {
   final String? downloadUrl;
   final instagramService = InstagramService();
 
-  final urlInputController = TextEditingController();
+  final urlInputController = TextEditingController(
+      text:
+          'https://videos.pexels.com/video-files/4114797/4114797-uhd_2560_1440_25fps.mp4');
   final fileNameInputController = TextEditingController();
   final downloadLocationInputController = TextEditingController();
 

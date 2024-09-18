@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/sheets/download_details.dart';
@@ -46,9 +47,12 @@ class DownloadsScreenContent extends StatelessWidget {
                         downloadsProvider.downloads[index],
                       ),
                       onLongPress: () => DownloadDetailsSheet.show(
-                        context,
-                        downloadsProvider.downloads[index],
-                      ),
+                          context, downloadsProvider.downloads[index],
+                          () async {
+                        await downloadsProvider
+                            .deleteTask(downloadsProvider.downloads[index]);
+                        GoRouter.of(context).pop();
+                      }),
                     ),
                     separatorBuilder: (context, index) => const Divider(
                       height: 1,

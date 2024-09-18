@@ -80,6 +80,11 @@ class DownloadTasksProvider extends ChangeNotifier {
     downloads = await DownloadsRepository.getTasks() ?? [];
   }
 
+  Future<void> deleteTask(DownloadTask task) async {
+    await DownloadsRepository.deleteTask(task);
+    fetchRecords();
+  }
+
   Future<void> goToNewDownloadScreen() async {
     await GoRouter.of(context).push('/downloads/new');
     init();

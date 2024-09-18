@@ -25,8 +25,8 @@ class DownloadService {
 
     if (response.statusCode != 200) throw Exception('Failed to download file');
 
-    final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/${task.name}';
+    // final directory = await getExternalStorageDirectory();
+    final filePath = '${task.downloadLocation}/${task.name}';
     final file = File(filePath);
 
     final totalBytes = response.contentLength ?? 0;
@@ -39,7 +39,7 @@ class DownloadService {
     response.stream.listen(
       (List<int> chunk) {
         // receivedBytes += chunk.length;
-        task.downloadedSize = task.downloadedSize ?? 0 + receivedBytes;
+        task.downloadedSize = task.downloadedSize ?? 0 + chunk.length;
         updatesStreamController.sink.add(task);
         // updates.onProgress(receivedBytes / totalBytes * 100, task);
         // download sink

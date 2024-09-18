@@ -6,12 +6,18 @@ import 'package:toolbox/models/download_task.dart';
 
 class DownloadDetailsSheet extends StatelessWidget {
   final DownloadTask download;
+  final void Function()? onDelete;
   const DownloadDetailsSheet({
     super.key,
     required this.download,
+    required this.onDelete,
   });
 
-  static void show(BuildContext context, DownloadTask downloadTask) {
+  static void show(
+    BuildContext context,
+    DownloadTask downloadTask,
+    void Function() onDelete,
+  ) {
     showModalBottomSheet(
       context: context,
       useSafeArea: true,
@@ -21,6 +27,7 @@ class DownloadDetailsSheet extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       builder: (context) => DownloadDetailsSheet(
         download: downloadTask,
+        onDelete: onDelete,
       ),
     );
   }
@@ -53,6 +60,30 @@ class DownloadDetailsSheet extends StatelessWidget {
                 pinned: true,
                 floating: false,
                 backgroundColor: Theme.of(context).dialogBackgroundColor,
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(60),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton.icon(
+                          onPressed: onDelete,
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Delete 1'),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: ElevatedButton.icon(
+                          onPressed: GoRouter.of(context).pop,
+                          icon: const Icon(Icons.close),
+                          label: const Text('Close'),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
               SliverList.list(
                 children: downloadDetails(context, download),
