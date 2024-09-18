@@ -8,6 +8,7 @@ class DownloadFields {
   static const String downloadStatus = 'downloadStatus';
   static const String thumbnailUrl = 'thumbnailUrl';
   static const String fileSize = 'fileSize';
+  static const String downloadedSize = 'downloadedSize';
 
   // table name
   static const String tableName = 'downloads';

@@ -90,7 +90,9 @@ class NewDownloadProvider extends ChangeNotifier {
       thumbnailUrl: '',
       fileSize: fileSize,
     );
-    await DownloadsRepository.insertTask(task);
+
+    task.id = await DownloadsRepository.insertTask(task);
+    DownloadService.downloadFile(task);
     // try {
     // await DownloadService.downloadFile(task, (progress, task) {
     // task.downloadStatus = DownloadStatus.inProcess;

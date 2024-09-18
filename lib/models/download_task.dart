@@ -1,5 +1,6 @@
 import 'package:toolbox/constants/download_fields.dart';
 import 'package:toolbox/enums/download_status.dart';
+import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/base_model.dart';
 
 class DownloadTask extends BaseModel {
@@ -11,6 +12,7 @@ class DownloadTask extends BaseModel {
   DownloadStatus downloadStatus;
   String thumbnailUrl;
   int? fileSize;
+  int? downloadedSize;
 
   DownloadTask({
     this.id,
@@ -21,6 +23,7 @@ class DownloadTask extends BaseModel {
     required this.downloadStatus,
     required this.thumbnailUrl,
     this.fileSize,
+    this.downloadedSize,
   }) : super();
 
   DownloadTask.fromMap(Map<String, dynamic> value)
@@ -35,6 +38,7 @@ class DownloadTask extends BaseModel {
             value[DownloadFields.createdAt] as int? ?? 0),
         thumbnailUrl = value[DownloadFields.thumbnailUrl] as String? ?? '',
         fileSize = value[DownloadFields.fileSize] as int?,
+        downloadedSize = value[DownloadFields.downloadedSize] as int?,
         super.fromMap();
 
   @override
@@ -46,6 +50,13 @@ class DownloadTask extends BaseModel {
         DownloadFields.createdAt: createdAt.millisecondsSinceEpoch,
         DownloadFields.downloadStatus: downloadStatus.value,
         DownloadFields.thumbnailUrl: thumbnailUrl,
-        DownloadFields.fileSize: fileSize
+        DownloadFields.fileSize: fileSize,
+        DownloadFields.downloadedSize: downloadedSize,
       };
+
+  String get downloadedSizeValue =>
+      getFileSizeString(bytes: downloadedSize ?? 0);
+  String get fileSizeValue => getFileSizeString(bytes: fileSize ?? 0);
+
+  double get progress => (downloadedSize ?? 0 * 100) / (fileSize ?? 1);
 }

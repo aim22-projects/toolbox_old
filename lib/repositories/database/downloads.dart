@@ -2,11 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:toolbox/constants/download_fields.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/base.dart';
+import 'package:toolbox/services/download_service.dart';
 
 class DownloadsRepository {
   static bool? _initialized;
 
-  DownloadsRepository._();
+  DownloadsRepository._() {
+    DownloadService.updates.listen(updateTask);
+  }
 
   static Future<void> get initialized async {
     if (_initialized != null && _initialized!) return;

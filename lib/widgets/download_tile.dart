@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:toolbox/enums/download_status.dart';
-import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download_task.dart';
 
 class DownloadTile extends StatelessWidget {
@@ -36,9 +35,10 @@ class DownloadTile extends StatelessWidget {
       subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Text('10%'),
-          Text(getFileSizeString(bytes: downloadTask.fileSize ?? 0))
-          // Text('122 MB / 289 MB'),
+          // Text(getFileSizeString(bytes: downloadTask.fileSize ?? 0))
+          Text(
+              '${downloadTask.downloadedSizeValue} / ${downloadTask.fileSizeValue}'),
+          Text("${downloadTask.progress}%"),
           // Text('1.2 MB/s'),
         ],
       ),

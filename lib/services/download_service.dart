@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,10 +13,12 @@ class DownloadService {
 
   factory DownloadService() => _instance;
 
-  static Future<void> downloadFile(
-    DownloadTask task,
-    Function(double, DownloadTask) onProgress,
-  ) async {
+  static StreamController<DownloadTask> updatesStreamController =
+      StreamController();
+
+  static Stream<DownloadTask> get updates => updatesStreamController.stream;
+
+  static Future<void> downloadFile(DownloadTask task) async {
     var request = http.Request('GET', Uri.parse(task.url));
 
     final response = await http.Client().send(request);
@@ -26,20 +30,30 @@ class DownloadService {
     final file = File(filePath);
 
     final totalBytes = response.contentLength ?? 0;
+    task.fileSize = totalBytes;
+    updatesStreamController.sink.add(task);
+
     int receivedBytes = 0;
 
     final sink = file.openWrite();
     response.stream.listen(
       (List<int> chunk) {
-        receivedBytes += chunk.length;
-        onProgress(receivedBytes / totalBytes * 100, task);
+        // receivedBytes += chunk.length;
+        task.downloadedSize = task.downloadedSize ?? 0 + receivedBytes;
+        updatesStreamController.sink.add(task);
+        // updates.onProgress(receivedBytes / totalBytes * 100, task);
+        // download sink
         sink.add(chunk);
       },
       onDone: () async {
         await sink.close();
+        task.downloadStatus = DownloadStatus.completed;
+        updatesStreamController.sink.add(task);
       },
-      onError: (error) {
-        sink.close();
+      onError: (error) async {
+        await sink.close();
+        task.downloadStatus = DownloadStatus.failed;
+        updatesStreamController.sink.add(task);
         throw error;
       },
     );
