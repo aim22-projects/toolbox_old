@@ -6,8 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:toolbox/routes.dart';
+import 'package:toolbox/services/download_service.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DownloadService.initializeManager();
   runApp(const MyApp());
 }
 

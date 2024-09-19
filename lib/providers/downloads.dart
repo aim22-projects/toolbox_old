@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:open_file/open_file.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/sharing_service.dart';
@@ -92,15 +93,20 @@ class DownloadTasksProvider extends ChangeNotifier {
 
   Future<void> openFile(DownloadTask task) async {
     try {
-      Uri uri = Uri.parse(task.url);
+      String path = "${task.downloadLocation}/${task.name}";
+      print(path);
 
-      if (!await canLaunchUrl(uri)) {
-        throw "No default app found to open link";
-      }
+      var result = await OpenFile.open(path);
 
-      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-        throw "Unknown error while open link";
-      }
+      // Uri uri = Uri.parse(task.url);
+
+      // if (!await canLaunchUrl(uri)) {
+      //   throw "No default app found to open link";
+      // }
+
+      // if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      //   throw "Unknown error while open link";
+      // }
     } catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
