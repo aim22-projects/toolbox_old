@@ -29,6 +29,10 @@ class DownloadService {
     final filePath = '${task.downloadLocation}/${task.name}';
     final file = File(filePath);
 
+    if (!await Directory(task.downloadLocation).exists()) {
+      await Directory(task.downloadLocation).create();
+    }
+
     final totalBytes = response.contentLength ?? 0;
     task.fileSize = totalBytes;
     updatesStreamController.sink.add(task);
