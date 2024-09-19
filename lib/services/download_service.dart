@@ -6,7 +6,9 @@ import 'package:toolbox/extensions/url.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:http/http.dart' as http;
 import 'package:toolbox/models/file_meta_data.dart';
+import 'package:toolbox/models/local_notification.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
+import 'package:toolbox/services/notification_service.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DownloadService {
@@ -42,6 +44,13 @@ class DownloadService {
     final file = File(task.filePath);
     final fileSink = file.openWrite();
 
+    // show notification
+    NotificationService.showNotification(LocalNotification(
+      title: 'Download started',
+      body: task.name,
+      payload: '',
+    ));
+
     // 5. listen downloading data and write to file
     response.stream.listen(
       (List<int> chunk) {
@@ -57,6 +66,12 @@ class DownloadService {
         // update database
         task.downloadStatus = DownloadStatus.completed;
         updatesStreamController.sink.add(task);
+        // show notification
+        NotificationService.showNotification(LocalNotification(
+          title: 'Download finished',
+          body: task.name,
+          payload: '',
+        ));
       },
       onError: (error) async {
         // close file write
@@ -64,6 +79,12 @@ class DownloadService {
         // update database
         task.downloadStatus = DownloadStatus.failed;
         updatesStreamController.sink.add(task);
+        // show notification
+        NotificationService.showNotification(LocalNotification(
+          title: 'Download failed',
+          body: task.name,
+          payload: '',
+        ));
       },
     );
   }
