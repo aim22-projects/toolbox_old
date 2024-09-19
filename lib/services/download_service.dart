@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:toolbox/enums/download_status.dart';
+import 'package:toolbox/extensions/url.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:http/http.dart' as http;
+import 'package:toolbox/models/file_meta_data.dart';
+import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:workmanager/workmanager.dart';
 
 class DownloadService {
@@ -17,51 +19,77 @@ class DownloadService {
   static StreamController<DownloadTask> updatesStreamController =
       StreamController();
 
-  static Stream<DownloadTask> get updates => updatesStreamController.stream;
+  static Stream<DownloadTask> get updates =>
+      updatesStreamController.stream..listen(DownloadsRepository.updateTask);
 
   static Future<void> downloadFile(DownloadTask task) async {
+    // 1. create http request
     var request = http.Request('GET', Uri.parse(task.url));
-
     final response = await http.Client().send(request);
-
     if (response.statusCode != 200) throw Exception('Failed to download file');
 
-    // final directory = await getExternalStorageDirectory();
-    final filePath = '${task.downloadLocation}/${task.name}';
-    final file = File(filePath);
+    // 2. insert download record
+    task.fileSize = response.contentLength ?? 0;
+    task.id = await DownloadsRepository.insertTask(task);
+    updatesStreamController.sink.add(task);
 
+    // 3. create download directory if not exists
     if (!await Directory(task.downloadLocation).exists()) {
       await Directory(task.downloadLocation).create();
     }
 
-    final totalBytes = response.contentLength ?? 0;
-    task.fileSize = totalBytes;
-    updatesStreamController.sink.add(task);
+    // 4. create file
+    final file = File(task.filePath);
+    final fileSink = file.openWrite();
 
-    int receivedBytes = 0;
-
-    final sink = file.openWrite();
+    // 5. listen downloading data and write to file
     response.stream.listen(
       (List<int> chunk) {
-        // receivedBytes += chunk.length;
+        // download sink
+        fileSink.add(chunk);
+        // update database
         task.downloadedSize = task.downloadedSize ?? 0 + chunk.length;
         updatesStreamController.sink.add(task);
-        // updates.onProgress(receivedBytes / totalBytes * 100, task);
-        // download sink
-        sink.add(chunk);
       },
       onDone: () async {
-        await sink.close();
+        // close file write
+        await fileSink.close();
+        // update database
         task.downloadStatus = DownloadStatus.completed;
         updatesStreamController.sink.add(task);
       },
       onError: (error) async {
-        await sink.close();
+        // close file write
+        await fileSink.close();
+        // update database
         task.downloadStatus = DownloadStatus.failed;
         updatesStreamController.sink.add(task);
-        throw error;
       },
     );
+  }
+
+  static Future<FileMetaData?> getDownloadFileMetaInfo(String url) async {
+    try {
+      // 2. fetch data
+      Uri uri = Uri.parse(url);
+      var response = await http.head(uri);
+      // 4. check response status code
+      if (response.statusCode != 200) return null;
+      // 5. parse headers
+
+      FileMetaData fileMetaData = FileMetaData(
+        fileSize: int.tryParse(response.headers['content-length'] ?? ''),
+        fileType: response.headers['content-type'],
+        fileName: response.headers.containsKey('content-disposition')
+            ? fileNameFromContentDiscriptionHeader(
+                response.headers['content-disposition'])
+            : fileNameFromContentTypeHeader(response.headers['content-type']) ??
+                '',
+      );
+      return fileMetaData;
+    } catch (ex) {
+      return null;
+    }
   }
 
   // Mandatory if the App is obfuscated or using Flutter 3.1+

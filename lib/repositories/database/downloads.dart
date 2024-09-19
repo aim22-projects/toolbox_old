@@ -45,12 +45,12 @@ class DownloadsRepository {
     }
   }
 
-  static Future<int?> insertTask(DownloadTask post) async {
+  static Future<int?> insertTask(DownloadTask task) async {
     try {
       await initialized;
       final db = await BaseDatabaseRepository.database;
 
-      return await db.insert(DownloadFields.tableName, post.toMap());
+      return await db.insert(DownloadFields.tableName, task.toMap());
     } catch (error) {
       if (kDebugMode) print(error);
 

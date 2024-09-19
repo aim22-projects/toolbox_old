@@ -1,24 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/instagram_reel.dart';
-import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/download_service.dart';
 import 'package:toolbox/services/instagram_service.dart';
 
 class NewDownloadProvider extends ChangeNotifier {
   final BuildContext context;
   final String? downloadUrl;
-  final instagramService = InstagramService();
 
-  final urlInputController = TextEditingController(
-      text:
-          'https://videos.pexels.com/video-files/4114797/4114797-uhd_2560_1440_25fps.mp4');
+  final urlInputController = TextEditingController();
   final fileNameInputController = TextEditingController();
   final downloadLocationInputController = TextEditingController();
 
@@ -65,14 +58,15 @@ class NewDownloadProvider extends ChangeNotifier {
     }
     // 2. fetch download location
     final downloadPath = (await getDownloadsDirectory())?.path ?? '/';
-    final path = join(downloadPath, 'toolbox');
-    downloadLocationInputController.text = path;
+    downloadLocationInputController.text = downloadPath;
 
     // 3. add input change listeners
     urlInputController.addListener(notifyListeners);
     fileNameInputController.addListener(notifyListeners);
     downloadLocationInputController.addListener(notifyListeners);
   }
+
+  String get fileUrl => urlInputController.text;
 
   bool get isFormValid =>
       urlInputController.text.isNotEmpty &&
@@ -93,20 +87,7 @@ class NewDownloadProvider extends ChangeNotifier {
       fileSize: fileSize,
     );
 
-    task.id = await DownloadsRepository.insertTask(task);
-    DownloadService.downloadFile(task);
-    // try {
-    // await DownloadService.downloadFile(task, (progress, task) {
-    // task.downloadStatus = DownloadStatus.inProcess;
-    // DownloadsRepository.updateTask(task);
-    // _tasks[fileName] = task.copyWith(progress: progress);
-    // notifyListeners();
-    // });
-    // _tasks[fileName] = task.copyWith(isDownloading: false);
-    // } catch (e) {
-    // _tasks[fileName] =
-    // task.copyWith(isDownloading: false, errorMessage: e.toString());
-    // }
+    await DownloadService.downloadFile(task);
     notifyListeners();
     // ignore: use_build_context_synchronously
     GoRouter.of(context).pop();
@@ -115,29 +96,15 @@ class NewDownloadProvider extends ChangeNotifier {
 
   Future<void> processUrl() async {
     await parseInstagramData();
-    await fetchUrlMetadata();
+    await getUrlMetadata();
   }
 
   Future<void> parseInstagramData() async {
-    // 1. check if valid instagram (reel) url
-    var url = urlInputController.text;
-    if (!url.startsWith("https://www.instagram.com/reel/")) {
-      return;
-    }
-    // 2. parse instagram reel data
-    // example instagram reel url
-    // "https://www.instagram.com/reel/C-RYWZCN2TY/?utm_source=ig_web_copy_link";
-    String reelId = url.split("/reel/")[1].split("/")[0];
-
     // 3. show loading
-    // String url = urlInputController.text;
     isLoading = true;
 
-    if (kDebugMode) {
-      print(reelId);
-    }
     // 4. fetch data
-    InstagramReel? result = await instagramService.fetchReelInfo(reelId);
+    InstagramReel? result = await InstagramService.getReelInfoFromUrl(fileUrl);
 
     // 5. hide loading
     isLoading = false;
@@ -147,55 +114,37 @@ class NewDownloadProvider extends ChangeNotifier {
 
     // 7. parse data
     urlInputController.text = result.videoLink;
-
     //
 
     // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).clearSnackBars();
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("instagram data parsed"),
-    ));
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(const SnackBar(
+        content: Text("instagram data parsed"),
+      ));
   }
 
-  Future<void> fetchUrlMetadata() async {
-    if (kDebugMode) {
-      print("fetch metadata");
-    }
+  Future<void> getUrlMetadata() async {
     try {
       // 1. show loading
       isLoading = true;
-      // 2. fetch data
-      Uri uri = Uri.parse(urlInputController.text);
-      var response = await http.head(uri);
+      // 4. check response status code
+      var fileMetaData = await DownloadService.getDownloadFileMetaInfo(fileUrl);
+      // 5. parse headers
+      fileSize = fileMetaData?.fileSize;
+      fileType = fileMetaData?.fileType;
+      fileNameInputController.text = fileMetaData?.fileName ?? '';
       // 3. hide loading
       isLoading = false;
-      // 4. check response status code
-      if (response.statusCode != 200) return;
-      // 5. parse headers
-      fileSize = int.tryParse(response.headers['content-length'] ?? '');
-      fileType = response.headers['content-type'];
-      if (response.headers.containsKey('content-disposition')) {
-        fileNameInputController.text =
-            response.headers['content-disposition'] ?? '';
-      } else {
-        fileNameInputController.text =
-            (response.headers['content-type'] ?? '').replaceFirst('/', '.');
-      }
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("metadata parsed"),
-      ));
     } catch (error) {
       // 1. hide loading
       isLoading = false;
-      if (kDebugMode) {
-        print(error);
-      }
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('$error'),
-      ));
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(SnackBar(
+          content: Text('$error'),
+        ));
     }
   }
 }
