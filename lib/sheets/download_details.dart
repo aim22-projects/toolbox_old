@@ -70,7 +70,7 @@ class DownloadDetailsSheet extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: onDelete,
                           icon: const Icon(Icons.delete),
-                          label: const Text('Delete 1'),
+                          label: const Text('Delete'),
                         ),
                       ),
                       Flexible(

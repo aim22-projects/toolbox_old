@@ -1,6 +1,6 @@
 class DownloadFields {
   // column names
-  static const String id = '_id';
+  static const String id = 'id';
   static const String url = 'url';
   static const String name = 'name';
   static const String downloadLocation = 'downloadLocation';
