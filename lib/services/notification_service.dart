@@ -3,7 +3,7 @@ import 'package:toolbox/models/local_notification.dart';
 
 class NotificationService {
   static final notificationPlugin = FlutterLocalNotificationsPlugin();
-  static const androiDetails = AndroidNotificationDetails(
+  static const androidDetails = AndroidNotificationDetails(
     'id',
     'notification',
     importance: Importance.max,
@@ -15,8 +15,16 @@ class NotificationService {
     presentSound: true,
   );
 
+  static requestPermission() {
+    notificationPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
+  }
+
   static init() async {
-    const androidSettings = AndroidInitializationSettings('ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -32,7 +40,7 @@ class NotificationService {
 
   static Future<void> showNotification(LocalNotification notification) async {
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androiDetails,
+      android: androidDetails,
       iOS: iosDetails,
     );
 

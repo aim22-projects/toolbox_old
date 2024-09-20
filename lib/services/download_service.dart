@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/extensions/url.dart';
 import 'package:toolbox/models/download_task.dart';
@@ -35,6 +36,8 @@ class DownloadService {
     task.id = await DownloadsRepository.insertTask(task);
     updatesStreamController.sink.add(task);
 
+    int downloadedSize = task.downloadedSize ?? 0;
+
     // 3. create download directory if not exists
     if (!await Directory(task.downloadLocation).exists()) {
       await Directory(task.downloadLocation).create();
@@ -53,12 +56,18 @@ class DownloadService {
 
     // 5. listen downloading data and write to file
     response.stream.listen(
-      (List<int> chunk) {
+      (List<int> chunk) async {
         // download sink
         fileSink.add(chunk);
         // update database
-        task.downloadedSize = task.downloadedSize ?? 0 + chunk.length;
+        downloadedSize += chunk.length;
+        task.downloadedSize = downloadedSize;
+        if (kDebugMode) {
+          // ignore: prefer_interpolation_to_compose_strings
+          print('downloaded:${task.downloadedSize}');
+        }
         updatesStreamController.sink.add(task);
+        await DownloadsRepository.updateTask(task);
       },
       onDone: () async {
         // close file write
@@ -72,6 +81,7 @@ class DownloadService {
           body: task.name,
           payload: '',
         ));
+        await DownloadsRepository.updateTask(task);
       },
       onError: (error) async {
         // close file write
@@ -85,6 +95,7 @@ class DownloadService {
           body: task.name,
           payload: '',
         ));
+        await DownloadsRepository.updateTask(task);
       },
     );
   }

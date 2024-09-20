@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toolbox/models/local_notification.dart';
 import 'package:toolbox/providers/downloads.dart';
+import 'package:toolbox/services/notification_service.dart';
 import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/sheets/new_download.dart';
 import 'package:toolbox/widgets/download_tile.dart';
@@ -26,9 +28,7 @@ class DownloadsScreenContent extends StatelessWidget {
     return Consumer<DownloadTasksProvider>(
       builder: (context, downloadsProvider, child) => Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          title: const Text('Downloads'),
-        ),
+        appBar: AppBar(title: const Text('Downloads')),
         body: RefreshIndicator(
           onRefresh: downloadsProvider.fetchRecords,
           child: CustomScrollView(

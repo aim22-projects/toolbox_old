@@ -7,6 +7,8 @@ import 'package:toolbox/services/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService.requestPermission();
+  StorageService.requestPermission();
   DownloadService.initializeManager();
   runApp(const MyApp());
 }
@@ -29,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   init() async {
     await NotificationService.init();
     // ignore: use_build_context_synchronously
-    await StorageService.showDialogs(context);
+    // await StorageService.showDialogs(context);
   }
 
   @override
