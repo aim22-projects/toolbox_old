@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toolbox/routes.dart';
-import 'package:toolbox/services/download_service.dart';
 import 'package:toolbox/services/notification_service.dart';
 import 'package:toolbox/services/storage_service.dart';
 
@@ -9,7 +8,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationService.requestPermission();
   StorageService.requestPermission();
-  DownloadService.initializeManager();
   runApp(const MyApp());
 }
 
