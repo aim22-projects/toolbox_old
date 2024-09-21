@@ -59,7 +59,7 @@ class DownloadTask extends BaseModel {
 
   String get fileSizeValue => getFileSizeString(bytes: fileSize ?? 0);
 
-  double get progress => (downloadedSize ?? 0 * 100) / (fileSize ?? 1);
+  int get progress => 100 * (downloadedSize ?? 0) ~/ (fileSize ?? 1);
 
   String get filePath => '$downloadLocation/$name';
 }

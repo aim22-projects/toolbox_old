@@ -16,10 +16,9 @@ class NotificationService {
   );
 
   static requestPermission() {
-    notificationPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!
-        .requestNotificationsPermission();
+    var d = notificationPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    d?.requestNotificationsPermission();
   }
 
   static init() async {

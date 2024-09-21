@@ -6,10 +6,6 @@ import 'package:toolbox/models/instagram_reel.dart';
 class InstagramService {
   InstagramService._internal();
 
-  // static InstagramService get _instance => InstagramService._internal();
-
-  // factory InstagramService() => _instance;
-
   // instragram reel link
   static bool isInstagramLink(String url) {
     return url.startsWith("https://www.instagram.com/reel/");
@@ -46,10 +42,6 @@ class InstagramService {
     // 3. parse response
     var responseJson = jsonDecode(response.body) as Map<String, dynamic>;
 
-    // if (kDebugMode) {
-    //   print(response.body);
-    // }
-
     // 4. return null if invalid response
     if (responseJson['data']['shortcode_media'] == null) {
       return null;
@@ -59,11 +51,6 @@ class InstagramService {
     if (!responseJson['data']['shortcode_media']['is_video']) {
       return null;
     }
-
-    // 5. parse data from json
-    // String videoLink = responseJson['data']['shortcode_media']['video_url'];
-    // String videoThumbnail =
-    //     responseJson['data']['shortcode_media']['thumbnail_src'];
 
     // 6. return reel data
     return InstagramReel.from(responseJson);

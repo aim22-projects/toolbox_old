@@ -23,6 +23,15 @@ class NewDownloadProvider extends ChangeNotifier {
   int? get fileSize => _fileSize;
   bool get isLoading => _isLoading;
 
+  String get url => urlInputController.text;
+  String get fileName => fileNameInputController.text;
+  String get downloadLocation => downloadLocationInputController.text;
+  bool? get isFileNameValid =>
+      DownloadService.isFileExists('$downloadLocation/$fileName');
+
+  bool get isFormValid =>
+      url.isNotEmpty && fileName.isNotEmpty && downloadLocation.isNotEmpty;
+
   set fileType(String? value) {
     _fileType = value;
     notifyListeners();
@@ -35,6 +44,21 @@ class NewDownloadProvider extends ChangeNotifier {
 
   set isLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  set url(String value) {
+    urlInputController.text = value;
+    notifyListeners();
+  }
+
+  set fileName(String value) {
+    fileNameInputController.text = value;
+    notifyListeners();
+  }
+
+  set downloadLocation(String value) {
+    downloadLocationInputController.text = value;
     notifyListeners();
   }
 
@@ -53,12 +77,11 @@ class NewDownloadProvider extends ChangeNotifier {
   init() async {
     // 1. parse download url shared from another app
     if (downloadUrl != null) {
-      urlInputController.text = downloadUrl!;
+      url = downloadUrl!;
       processUrl();
     }
     // 2. fetch download location
-    final downloadPath = (await getDownloadsDirectory())?.path ?? '/';
-    downloadLocationInputController.text = downloadPath;
+    downloadLocation = (await getDownloadsDirectory())?.path ?? '/';
 
     // 3. add input change listeners
     urlInputController.addListener(notifyListeners);
@@ -66,21 +89,14 @@ class NewDownloadProvider extends ChangeNotifier {
     downloadLocationInputController.addListener(notifyListeners);
   }
 
-  String get fileUrl => urlInputController.text;
-
-  bool get isFormValid =>
-      urlInputController.text.isNotEmpty &&
-      fileNameInputController.text.isNotEmpty &&
-      downloadLocationInputController.text.isNotEmpty;
-
   Future<void> Function()? get addNewDownloadEvent =>
       isFormValid ? addNewDownloadTask : null;
 
   Future<void> addNewDownloadTask() async {
     var task = DownloadTask(
-      url: urlInputController.text,
-      name: fileNameInputController.text,
-      downloadLocation: downloadLocationInputController.text,
+      url: url,
+      name: fileName,
+      downloadLocation: downloadLocation,
       createdAt: DateTime.now(),
       downloadStatus: DownloadStatus.completed,
       thumbnailUrl: '',
@@ -104,7 +120,7 @@ class NewDownloadProvider extends ChangeNotifier {
     isLoading = true;
 
     // 4. fetch data
-    InstagramReel? result = await InstagramService.getReelInfoFromUrl(fileUrl);
+    InstagramReel? result = await InstagramService.getReelInfoFromUrl(url);
 
     // 5. hide loading
     isLoading = false;
@@ -113,7 +129,7 @@ class NewDownloadProvider extends ChangeNotifier {
     if (result == null) return;
 
     // 7. parse data
-    urlInputController.text = result.videoLink;
+    url = result.videoLink;
     //
 
     // ignore: use_build_context_synchronously
@@ -125,26 +141,25 @@ class NewDownloadProvider extends ChangeNotifier {
   }
 
   Future<void> getUrlMetadata() async {
+    // 1. show loading
+    isLoading = true;
     try {
-      // 1. show loading
-      isLoading = true;
-      // 4. check response status code
-      var fileMetaData = await DownloadService.getDownloadFileMetaInfo(fileUrl);
-      // 5. parse headers
+      // 1. get metadata from download url
+      var fileMetaData = await DownloadService.getDownloadFileMetaInfo(url);
+      // 2. parse headers
       fileSize = fileMetaData?.fileSize;
       fileType = fileMetaData?.fileType;
-      fileNameInputController.text = fileMetaData?.fileName ?? '';
-      // 3. hide loading
-      isLoading = false;
+      fileName = fileMetaData?.fileName ?? '';
     } catch (error) {
-      // 1. hide loading
-      isLoading = false;
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
         ..showSnackBar(SnackBar(
           content: Text('$error'),
         ));
+    } finally {
+      // 1. hide loading
+      isLoading = false;
     }
   }
 }
