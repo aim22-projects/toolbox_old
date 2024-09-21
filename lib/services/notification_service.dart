@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:toolbox/models/local_notification.dart';
 
@@ -16,9 +18,17 @@ class NotificationService {
   );
 
   static requestPermission() {
-    var d = notificationPlugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
-    d?.requestNotificationsPermission();
+    if (Platform.isAndroid) {
+      var androidPlugin =
+          notificationPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      androidPlugin?.requestNotificationsPermission();
+    }
+    if (Platform.isIOS) {
+      var iosPlugin = notificationPlugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+      iosPlugin?.requestPermissions();
+    }
   }
 
   static init() async {

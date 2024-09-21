@@ -1,7 +1,5 @@
-import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/models/download_task.dart';
 
 class DownloadOptionsSheet extends StatelessWidget {
