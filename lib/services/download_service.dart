@@ -12,17 +12,19 @@ import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/notification_service.dart';
 
 class DownloadService {
-  DownloadService._internal();
+  DownloadService._internal() {
+    updates.listen(DownloadsRepository.updateTask);
+  }
 
   static DownloadService get _instance => DownloadService._internal();
 
   factory DownloadService() => _instance;
 
   static StreamController<DownloadTask> updatesStreamController =
-      StreamController();
+      StreamController.broadcast();
 
   static Stream<DownloadTask> get updates =>
-      updatesStreamController.stream..listen(DownloadsRepository.updateTask);
+      updatesStreamController.stream.asBroadcastStream();
 
   static Future<void> downloadFile(DownloadTask task) async {
     try {

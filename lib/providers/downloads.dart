@@ -10,7 +10,7 @@ import 'package:toolbox/services/sharing_service.dart';
 import 'package:toolbox/sheets/new_download.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class DownloadTasksProvider extends ChangeNotifier {
+class DownloadsProvider extends ChangeNotifier {
   List<DownloadTask> _downloads = [];
   final BuildContext context;
 
@@ -21,7 +21,7 @@ class DownloadTasksProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  DownloadTasksProvider({required this.context}) {
+  DownloadsProvider({required this.context}) {
     init();
     DownloadService.updates.listen((task) {
       fetchRecords();

@@ -12,7 +12,7 @@ class DownloadsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DownloadTasksProvider(context: context),
+      create: (context) => DownloadsProvider(context: context),
       builder: (context, child) => const DownloadsScreenContent(),
     );
   }
@@ -24,10 +24,18 @@ class DownloadsScreenContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: use popscope to handle back gesture
-    return Consumer<DownloadTasksProvider>(
+    return Consumer<DownloadsProvider>(
       builder: (context, downloadsProvider, child) => Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(title: const Text('Downloads')),
+        // resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: const Text('Downloads'),
+          actions: [
+            IconButton(
+              onPressed: downloadsProvider.fetchRecords,
+              icon: const Icon(Icons.refresh),
+            )
+          ],
+        ),
         body: RefreshIndicator(
           onRefresh: downloadsProvider.fetchRecords,
           child: ListView.separated(
