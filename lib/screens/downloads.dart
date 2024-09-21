@@ -25,7 +25,7 @@ class DownloadsScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DownloadTasksProvider>(
       builder: (context, downloadsProvider, child) => PopScope(
-        onPopInvokedWithResult: (didPop, result) {},
+        // onPopInvokedWithResult: (bool didPop, Object? result) {},
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           appBar: AppBar(title: const Text('Downloads')),
