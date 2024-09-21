@@ -77,6 +77,7 @@ class NewDownloadSheetContent extends StatelessWidget {
                   Center(
                     child: Text(
                       "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}",
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
                 ],
@@ -113,11 +114,13 @@ class NewDownloadSheetContent extends StatelessWidget {
                         keyboardType: TextInputType.text,
                         enabled: !newDownloadProvider.isLoading,
                       ),
+                      // if (newDownloadProvider.fileName.isNotEmpty)
                       const Divider(
                         height: 1,
                         indent: 16,
                         endIndent: 16,
                       ),
+                      // if (newDownloadProvider.fileName.isNotEmpty)
                       TextField(
                         controller: newDownloadProvider.fileNameInputController,
                         decoration: const InputDecoration(

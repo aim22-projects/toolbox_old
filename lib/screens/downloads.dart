@@ -29,17 +29,10 @@ class DownloadsScreenContent extends StatelessWidget {
         // resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Downloads'),
-          actions: [
-            IconButton(
-              onPressed: downloadsProvider.fetchRecords,
-              icon: const Icon(Icons.refresh),
-            )
-          ],
         ),
         body: RefreshIndicator(
           onRefresh: downloadsProvider.fetchRecords,
           child: ListView.separated(
-            shrinkWrap: true,
             physics: const AlwaysScrollableScrollPhysics(),
             itemBuilder: (context, index) => DownloadTile(
               downloadTask: downloadsProvider.downloads[index],
