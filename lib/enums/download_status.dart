@@ -9,9 +9,8 @@ enum DownloadStatus {
   const DownloadStatus(this.value);
 
   // Precompute the map for quick lookup
-  static final Map<int, DownloadStatus> _valueMap = {
-    for (var status in DownloadStatus.values) status.value: status
-  };
+  static Map<int, DownloadStatus> get _valueMap =>
+      {for (var status in DownloadStatus.values) status.value: status};
 
   // Optimized fromValue method using the precomputed map
   static DownloadStatus fromValue(int value) {

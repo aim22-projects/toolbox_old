@@ -98,7 +98,7 @@ class NewDownloadProvider extends ChangeNotifier {
       name: fileName,
       downloadLocation: downloadLocation,
       createdAt: DateTime.now(),
-      downloadStatus: DownloadStatus.completed,
+      downloadStatus: DownloadStatus.loading,
       thumbnailUrl: '',
       fileSize: fileSize,
     );

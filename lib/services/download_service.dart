@@ -66,10 +66,7 @@ class DownloadService {
           // update database
           downloadedSize += chunk.length;
           task.downloadedSize = downloadedSize;
-          if (kDebugMode) {
-            // ignore: prefer_interpolation_to_compose_strings
-            print('downloaded:${task.downloadedSize}');
-          }
+          task.downloadStatus = DownloadStatus.inProcess;
           updatesStreamController.sink.add(task);
           // await DownloadsRepository.updateTask(task);
         },

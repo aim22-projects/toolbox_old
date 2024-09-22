@@ -83,7 +83,8 @@ class DownloadTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (downloadTask.downloadStatus == DownloadStatus.inProcess) {
+    if (downloadTask.downloadStatus == DownloadStatus.inProcess ||
+        downloadTask.downloadStatus == DownloadStatus.loading) {
       return inProcess(context);
     } else {
       return completed(context);

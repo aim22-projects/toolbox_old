@@ -35,7 +35,7 @@ class DownloadTask extends BaseModel {
         createdAt = DateTime.fromMillisecondsSinceEpoch(
             value[DownloadFields.createdAt] as int? ?? 0),
         downloadStatus = DownloadStatus.fromValue(
-            value[DownloadFields.createdAt] as int? ?? 0),
+            value[DownloadFields.downloadStatus] as int? ?? 0),
         thumbnailUrl = value[DownloadFields.thumbnailUrl] as String? ?? '',
         fileSize = value[DownloadFields.fileSize] as int?,
         downloadedSize = value[DownloadFields.downloadedSize] as int?,

@@ -53,7 +53,7 @@ class DownloadsScreenContent extends StatelessWidget {
             ),
             separatorBuilder: (context, index) => const Divider(
               height: 1,
-              indent: 16,
+              indent: 72,
               endIndent: 16,
             ),
             itemCount: downloadsProvider.downloads.length,
