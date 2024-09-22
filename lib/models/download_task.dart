@@ -10,7 +10,7 @@ class DownloadTask extends BaseModel {
   String downloadLocation;
   DateTime createdAt;
   DownloadStatus downloadStatus;
-  String thumbnailUrl;
+  String? thumbnailUrl;
   int? fileSize;
   int? downloadedSize;
 
@@ -20,8 +20,8 @@ class DownloadTask extends BaseModel {
     required this.name,
     required this.downloadLocation,
     required this.createdAt,
-    required this.downloadStatus,
-    required this.thumbnailUrl,
+    this.downloadStatus = DownloadStatus.loading,
+    this.thumbnailUrl,
     this.fileSize,
     this.downloadedSize,
   }) : super();
@@ -36,7 +36,7 @@ class DownloadTask extends BaseModel {
             value[DownloadFields.createdAt] as int? ?? 0),
         downloadStatus = DownloadStatus.fromValue(
             value[DownloadFields.downloadStatus] as int? ?? 0),
-        thumbnailUrl = value[DownloadFields.thumbnailUrl] as String? ?? '',
+        thumbnailUrl = value[DownloadFields.thumbnailUrl] as String?,
         fileSize = value[DownloadFields.fileSize] as int?,
         downloadedSize = value[DownloadFields.downloadedSize] as int?,
         super.fromMap();

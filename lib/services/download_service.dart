@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/extensions/url.dart';
 import 'package:toolbox/models/download_task.dart';
@@ -12,9 +11,7 @@ import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/notification_service.dart';
 
 class DownloadService {
-  DownloadService._internal() {
-    updates.listen(DownloadsRepository.updateTask);
-  }
+  DownloadService._internal();
 
   static DownloadService get _instance => DownloadService._internal();
 
@@ -24,7 +21,7 @@ class DownloadService {
       StreamController.broadcast();
 
   static Stream<DownloadTask> get updates =>
-      updatesStreamController.stream.asBroadcastStream();
+      updatesStreamController.stream..listen(DownloadsRepository.updateTask);
 
   static Future<void> downloadFile(DownloadTask task) async {
     try {
@@ -55,7 +52,6 @@ class DownloadService {
       NotificationService.showNotification(LocalNotification(
         title: 'Download started',
         body: task.name,
-        payload: '',
       ));
 
       // 5. listen downloading data and write to file
@@ -80,7 +76,7 @@ class DownloadService {
           NotificationService.showNotification(LocalNotification(
             title: 'Download finished',
             body: task.name,
-            payload: '',
+            payload: task.filePath,
           ));
           // await DownloadsRepository.updateTask(task);
         },
@@ -94,7 +90,6 @@ class DownloadService {
           NotificationService.showNotification(LocalNotification(
             title: 'Download failed',
             body: task.name,
-            payload: '',
           ));
           // await DownloadsRepository.updateTask(task);
         },

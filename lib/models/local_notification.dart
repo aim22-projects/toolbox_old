@@ -8,6 +8,6 @@ class LocalNotification {
     this.id = 0,
     required this.title,
     required this.body,
-    required this.payload,
+    this.payload,
   });
 }

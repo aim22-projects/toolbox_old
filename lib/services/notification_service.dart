@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_file/open_file.dart';
 import 'package:toolbox/models/local_notification.dart';
 
 class NotificationService {
@@ -44,7 +45,25 @@ class NotificationService {
       iOS: iosSettings,
     );
 
-    await notificationPlugin.initialize(initializationSettings);
+    await notificationPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) async {
+        try {
+          if (details.payload != null) {
+            var result = await OpenFile.open(details.payload!);
+          }
+          // ignore: empty_catches
+        } catch (e) {}
+      },
+      onDidReceiveBackgroundNotificationResponse: (details) async {
+        try {
+          if (details.payload != null) {
+            var result = await OpenFile.open(details.payload!);
+          }
+          // ignore: empty_catches
+        } catch (e) {}
+      },
+    );
   }
 
   static Future<void> showNotification(LocalNotification notification) async {
