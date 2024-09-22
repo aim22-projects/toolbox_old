@@ -14,7 +14,11 @@ enum DownloadStatus {
 
   // Optimized fromValue method using the precomputed map
   static DownloadStatus fromValue(int value) {
-    return _valueMap[value] ??
-        DownloadStatus.loading; // default to loading if not found
+    // return _valueMap[value] ??
+    //   DownloadStatus.loading; // default to loading if not found
+
+    return _valueMap.containsKey(value)
+        ? _valueMap[value]!
+        : DownloadStatus.loading; // default to loading if not found
   }
 }
