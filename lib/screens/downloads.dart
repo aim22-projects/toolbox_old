@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/providers/downloads.dart';
+import 'package:toolbox/routes.dart';
 import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/sheets/new_download.dart';
 import 'package:toolbox/widgets/download_tile.dart';
@@ -29,6 +30,13 @@ class DownloadsScreenContent extends StatelessWidget {
         // resizeToAvoidBottomInset: true,
         appBar: AppBar(
           title: const Text('Downloads'),
+          actions: [
+            IconButton(
+              onPressed: () =>
+                  GoRouter.of(context).pushNamed(AppRouteNames.settings),
+              icon: const Icon(Icons.settings),
+            )
+          ],
         ),
         body: RefreshIndicator(
           onRefresh: downloadsProvider.fetchRecords,

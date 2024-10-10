@@ -5,10 +5,10 @@ import 'package:toolbox/services/notification_service.dart';
 import 'package:toolbox/services/storage_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService.requestPermission();
-  await StorageService.requestPermission();
-  await NotificationService.init();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await NotificationService.requestPermission();
+  // await StorageService.requestPermission();
+  // await NotificationService.init();
 
   runApp(const MyApp());
 }
