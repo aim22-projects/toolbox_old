@@ -5,13 +5,7 @@ class Preferences {
   Preferences._() {
     init();
   }
-
-  static SharedPreferences? _prefs; // = await SharedPreferences.getInstance();
-
-  static Future<SharedPreferences> get preferences async {
-    if (_prefs != null) return _prefs!;
-    return _prefs = await SharedPreferences.getInstance();
-  }
+  static SharedPreferencesAsync preferences = SharedPreferencesAsync();
 
   init() async {
     String? downloadLocation = (await getDownloadsDirectory())?.path;
@@ -19,8 +13,8 @@ class Preferences {
   }
 
   static Future<String?> get downloadLocation async =>
-      (await preferences).getString("download_location");
+      preferences.getString("download_location");
 
   static setDownloadLocation(String value) async =>
-      (await preferences).getString("download_location");
+      preferences.setString("download_location", value);
 }

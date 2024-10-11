@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class StorageService {
@@ -25,9 +24,9 @@ class StorageService {
 
     // storage permission already granted
     if (status.isGranted) {
-      print("Permission already granted");
-      String downloadPath = await getDownloadPath();
-      print('Download Path: $downloadPath');
+      if (kDebugMode) {
+        print("Permission already granted");
+      }
       return;
     }
 
@@ -40,10 +39,15 @@ class StorageService {
 
     // storage permission denied
     if (!await requestStorage().isGranted) {
-      return print("Permission denied");
+      if (kDebugMode) {
+        print("Permission denied");
+      }
+      return;
     }
     // storage permission granted
-    print("Permission granted");
+    if (kDebugMode) {
+      print("Permission granted");
+    }
   }
 
   static showDialogs(BuildContext context) {
@@ -57,13 +61,5 @@ class StorageService {
         ],
       ),
     );
-  }
-
-  static Future<String> getDownloadPath() async {
-    Directory? downloadsDirectory = await getExternalStorageDirectory();
-    if (downloadsDirectory != null) {
-      return downloadsDirectory.path;
-    }
-    throw Exception('Could not get download path');
   }
 }

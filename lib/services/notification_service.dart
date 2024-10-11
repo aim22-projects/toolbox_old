@@ -50,7 +50,7 @@ class NotificationService {
       onDidReceiveNotificationResponse: (details) async {
         try {
           if (details.payload != null) {
-            var result = await OpenFile.open(details.payload!);
+            await OpenFile.open(details.payload!);
           }
           // ignore: empty_catches
         } catch (e) {}
@@ -58,7 +58,7 @@ class NotificationService {
       onDidReceiveBackgroundNotificationResponse: (details) async {
         try {
           if (details.payload != null) {
-            var result = await OpenFile.open(details.payload!);
+            await OpenFile.open(details.payload!);
           }
           // ignore: empty_catches
         } catch (e) {}

@@ -8,7 +8,6 @@ import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/download_service.dart';
 import 'package:toolbox/services/sharing_service.dart';
 import 'package:toolbox/sheets/new_download.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DownloadsProvider extends ChangeNotifier {
   List<DownloadTask> _downloads = [];
@@ -98,9 +97,8 @@ class DownloadsProvider extends ChangeNotifier {
   Future<void> openFile(DownloadTask task) async {
     try {
       String path = "${task.downloadLocation}/${task.name}";
-      print(path);
 
-      var result = await OpenFile.open(path);
+      await OpenFile.open(path);
 
       // Uri uri = Uri.parse(task.url);
 
