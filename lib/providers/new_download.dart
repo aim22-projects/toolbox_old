@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/instagram_reel.dart';
+import 'package:toolbox/repositories/preferences.dart';
 import 'package:toolbox/services/download_service.dart';
 import 'package:toolbox/services/instagram_service.dart';
 
@@ -13,7 +13,6 @@ class NewDownloadProvider extends ChangeNotifier {
 
   final urlInputController = TextEditingController();
   final fileNameInputController = TextEditingController();
-  final downloadLocationInputController = TextEditingController();
 
   bool _isLoading = false;
   int? _fileSize;
@@ -25,12 +24,9 @@ class NewDownloadProvider extends ChangeNotifier {
 
   String get url => urlInputController.text;
   String get fileName => fileNameInputController.text;
-  String get downloadLocation => downloadLocationInputController.text;
-  bool? get isFileNameValid =>
-      DownloadService.isFileExists('$downloadLocation/$fileName');
+  bool? get isFileNameValid => DownloadService.isFileExists(fileName);
 
-  bool get isFormValid =>
-      url.isNotEmpty && fileName.isNotEmpty && downloadLocation.isNotEmpty;
+  bool get isFormValid => url.isNotEmpty && fileName.isNotEmpty;
 
   set fileType(String? value) {
     _fileType = value;
@@ -57,11 +53,6 @@ class NewDownloadProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set downloadLocation(String value) {
-    downloadLocationInputController.text = value;
-    notifyListeners();
-  }
-
   NewDownloadProvider({required this.context, this.downloadUrl}) {
     init();
   }
@@ -70,7 +61,6 @@ class NewDownloadProvider extends ChangeNotifier {
   void dispose() {
     urlInputController.dispose();
     fileNameInputController.dispose();
-    downloadLocationInputController.dispose();
     super.dispose();
   }
 
@@ -80,20 +70,20 @@ class NewDownloadProvider extends ChangeNotifier {
       url = downloadUrl!;
       processUrl();
     }
-    // 2. fetch download location
-    downloadLocation = (await getDownloadsDirectory())?.path ?? '/';
 
     // 3. add input change listeners
     urlInputController.addListener(notifyListeners);
     fileNameInputController.addListener(notifyListeners);
-    downloadLocationInputController.addListener(notifyListeners);
   }
 
   Future<void> Function()? get addNewDownloadEvent =>
       isFormValid ? addNewDownloadTask : null;
 
   Future<void> addNewDownloadTask() async {
-    var task = DownloadTask(
+    // 2. fetch download location
+    var downloadLocation = await Preferences.downloadLocation ?? '/';
+
+    await DownloadService.downloadFile(DownloadTask(
       url: url,
       name: fileName,
       downloadLocation: downloadLocation,
@@ -101,9 +91,7 @@ class NewDownloadProvider extends ChangeNotifier {
       downloadStatus: DownloadStatus.loading,
       thumbnailUrl: '',
       fileSize: fileSize,
-    );
-
-    await DownloadService.downloadFile(task);
+    ));
     notifyListeners();
     // ignore: use_build_context_synchronously
     GoRouter.of(context).pop();

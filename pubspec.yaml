@@ -28,6 +28,8 @@ dependencies:
   workmanager: ^0.5.2
   open_file: ^3.5.4
   flutter_local_notifications: ^17.2.2
+  shared_preferences: ^2.3.2
+  file_picker: ^8.1.2
 
 dev_dependencies:
   flutter_test:
