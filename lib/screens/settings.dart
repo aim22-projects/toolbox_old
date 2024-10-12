@@ -28,44 +28,63 @@ class SettingsScreenContent extends StatelessWidget {
           body: ListView(
             children: [
               const ListTile(
-                title: Text("Permission"),
+                title: Text("Permissions"),
                 dense: true,
+                minTileHeight: 0,
               ),
-              ListTile(
-                leading: const Icon(Icons.storage),
-                title: const Text("Storage"),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: provider.getStoragePermission,
-              ),
-              ListTile(
-                leading: const Icon(Icons.notifications),
-                title: const Text("Notifications"),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: provider.getNotificationPermission,
+              Card(
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.storage),
+                      title: const Text("Storage"),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: provider.getStoragePermission,
+                    ),
+                    const Divider(
+                      height: 1,
+                      indent: 8,
+                      endIndent: 8,
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.notifications),
+                      title: const Text("Notifications"),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: provider.getNotificationPermission,
+                    ),
+                  ],
+                ),
               ),
               const ListTile(
                 title: Text("Preferences"),
                 dense: true,
+                minTileHeight: 0,
               ),
-              ListTile(
-                leading: const Icon(Icons.notifications),
-                title: const Text("Download Location"),
-                subtitle: FutureBuilder(
-                  initialData: '-',
-                  future: provider.downloadLocation,
-                  builder: (context, snapshot) {
-                    return switch (snapshot.connectionState) {
-                      ConnectionState.none => const Text("Initializing..."),
-                      ConnectionState.waiting => const Text("Loading..."),
-                      ConnectionState.done => snapshot.hasError
-                          ? const Text("-")
-                          : Text(snapshot.data ?? "-"),
-                      _ => const Text("-"),
-                    };
-                  },
+              Card(
+                child: Column(
+                  children: [
+                    FutureBuilder(
+                      initialData: '-',
+                      future: provider.downloadLocation,
+                      builder: (context, snapshot) {
+                        var value = switch (snapshot.connectionState) {
+                          ConnectionState.none => "Initializing...",
+                          ConnectionState.waiting => "Loading...",
+                          ConnectionState.done =>
+                            snapshot.hasError ? "-" : snapshot.data ?? "-",
+                          _ => "-",
+                        };
+                        return ListTile(
+                          leading: const Icon(Icons.folder),
+                          title: const Text("Download Location"),
+                          subtitle: Text(value),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: provider.pickDownloadLocation,
+                        );
+                      },
+                    )
+                  ],
                 ),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: provider.pickDownloadLocation,
               ),
             ],
           ),

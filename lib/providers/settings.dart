@@ -18,7 +18,8 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> pickDownloadLocation() async {
     // 1. pick location
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    String? selectedDirectory = await FilePicker.platform
+        .getDirectoryPath(initialDirectory: await Preferences.downloadLocation);
     // 1.1. validate result
     if (selectedDirectory == null) return;
 
