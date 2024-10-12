@@ -18,6 +18,24 @@ class NotificationService {
     presentSound: true,
   );
 
+  static Future<bool> get permissionStatus async {
+    if (Platform.isAndroid) {
+      var androidPlugin =
+          notificationPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      return await androidPlugin?.areNotificationsEnabled() ?? false;
+    }
+    if (Platform.isIOS) {
+      var iosPlugin = notificationPlugin.resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>();
+
+      var result = await iosPlugin?.checkPermissions();
+      return (result?.isEnabled ?? false) ||
+          (result?.isProvisionalEnabled ?? false);
+    }
+    return false;
+  }
+
   static requestPermission() {
     if (Platform.isAndroid) {
       var androidPlugin =

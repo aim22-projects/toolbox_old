@@ -6,8 +6,11 @@ import 'package:toolbox/services/storage_service.dart';
 
 class SettingsProvider extends ChangeNotifier {
   Future<bool> get storagePermissionStatus => StorageService.permissionStatus;
+  Future<bool> get notificationPermissionStatus =>
+      NotificationService.permissionStatus;
 
-  Future<void> getNotificationPermission() async {
+  Future<void> getNotificationPermission(bool newValue) async {
+    if (!newValue) return;
     await NotificationService.requestPermission();
     await NotificationService.init();
   }

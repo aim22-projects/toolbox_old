@@ -59,11 +59,24 @@ class SettingsScreenContent extends StatelessWidget {
                       indent: 8,
                       endIndent: 8,
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.notifications),
-                      title: const Text("Notifications"),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: provider.getNotificationPermission,
+                    FutureBuilder(
+                      initialData: false,
+                      future: provider.notificationPermissionStatus,
+                      builder: (context, snapshot) {
+                        var value = switch (snapshot.connectionState) {
+                          ConnectionState.none => false,
+                          ConnectionState.waiting => false,
+                          ConnectionState.done =>
+                            snapshot.hasError ? false : snapshot.data ?? false,
+                          _ => false,
+                        };
+                        return SwitchListTile(
+                          secondary: const Icon(Icons.notifications),
+                          title: const Text("Notifications"),
+                          value: value,
+                          onChanged: provider.getNotificationPermission,
+                        );
+                      },
                     ),
                   ],
                 ),
