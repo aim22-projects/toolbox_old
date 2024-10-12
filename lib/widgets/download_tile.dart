@@ -83,11 +83,49 @@ class DownloadTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (downloadTask.downloadStatus == DownloadStatus.inProcess ||
-        downloadTask.downloadStatus == DownloadStatus.loading) {
-      return inProcess(context);
-    } else {
-      return completed(context);
-    }
+    // if (downloadTask.downloadStatus == DownloadStatus.inProcess ||
+    //     downloadTask.downloadStatus == DownloadStatus.loading) {
+    //   return inProcess(context);
+    // } else {
+    //   return completed(context);
+    // }
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Theme.of(context).primaryColorLight,
+          child: const Icon(Icons.movie),
+        ),
+        title: Text(
+          downloadTask.name,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        onTap: downloadTask.downloadStatus == DownloadStatus.inProcess ||
+                downloadTask.downloadStatus == DownloadStatus.loading
+            ? onTap
+            : null,
+        onLongPress: onLongPress,
+        // trailing: Text("30 MB"),
+        subtitle: downloadTask.downloadStatus == DownloadStatus.inProcess ||
+                downloadTask.downloadStatus == DownloadStatus.loading
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...[
+                    Text(
+                        '${downloadTask.downloadedSizeValue} / ${downloadTask.fileSizeValue}'),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: downloadTask.progress / 100,
+                    ),
+                  ],
+                ],
+              )
+            : Text(downloadTask.fileSizeValue),
+        trailing: (downloadTask.downloadStatus == DownloadStatus.paused
+            ? const Icon(Icons.pause)
+            : null),
+      ),
+    );
   }
 }
