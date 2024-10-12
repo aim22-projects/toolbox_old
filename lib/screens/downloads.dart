@@ -38,34 +38,38 @@ class DownloadsScreenContent extends StatelessWidget {
             )
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: downloadsProvider.fetchRecords,
-          child: ListView.separated(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) => DownloadTile(
-              downloadTask: downloadsProvider.downloads[index],
-              selected: false,
-              onTap: () => downloadsProvider.openFile(
-                downloadsProvider.downloads[index],
-              ),
-              onLongPress: () => DownloadDetailsSheet.show(
-                context,
-                downloadsProvider.downloads[index],
-                () async {
-                  await downloadsProvider
-                      .deleteTask(downloadsProvider.downloads[index]);
-                  // ignore: use_build_context_synchronously
-                  GoRouter.of(context).pop();
-                },
+        body: Column(
+          children: [
+            Card(
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                itemBuilder: (context, index) => DownloadTile(
+                  downloadTask: downloadsProvider.downloads[index],
+                  selected: false,
+                  onTap: () => downloadsProvider.openFile(
+                    downloadsProvider.downloads[index],
+                  ),
+                  onLongPress: () => DownloadDetailsSheet.show(
+                    context,
+                    downloadsProvider.downloads[index],
+                    () async {
+                      await downloadsProvider
+                          .deleteTask(downloadsProvider.downloads[index]);
+                      // ignore: use_build_context_synchronously
+                      GoRouter.of(context).pop();
+                    },
+                  ),
+                ),
+                separatorBuilder: (context, index) => const Divider(
+                  height: 1,
+                  indent: 72,
+                  endIndent: 16,
+                ),
+                itemCount: downloadsProvider.downloads.length,
               ),
             ),
-            separatorBuilder: (context, index) => const Divider(
-              height: 1,
-              indent: 72,
-              endIndent: 16,
-            ),
-            itemCount: downloadsProvider.downloads.length,
-          ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           // onPressed: downloadsProvider.goToNewDownloadScreen,
