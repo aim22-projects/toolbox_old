@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(
         useMaterial3: true,
       ).copyWith(
-        textTheme: GoogleFonts.latoTextTheme(ThemeData.light().textTheme),
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
       ),
       darkTheme: ThemeData.dark().copyWith(
         appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
         scaffoldBackgroundColor: Colors.black,
-        textTheme: GoogleFonts.latoTextTheme(ThemeData.dark().textTheme),
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
       ),
       themeMode: ThemeMode.dark,
       routerConfig: appRouter,

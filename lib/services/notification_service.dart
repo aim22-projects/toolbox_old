@@ -47,23 +47,19 @@ class NotificationService {
 
     await notificationPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (details) async {
-        try {
-          if (details.payload != null) {
-            await OpenFile.open(details.payload!);
-          }
-          // ignore: empty_catches
-        } catch (e) {}
-      },
-      onDidReceiveBackgroundNotificationResponse: (details) async {
-        try {
-          if (details.payload != null) {
-            await OpenFile.open(details.payload!);
-          }
-          // ignore: empty_catches
-        } catch (e) {}
-      },
+      onDidReceiveNotificationResponse: notificationListener,
+      onDidReceiveBackgroundNotificationResponse: notificationListener,
     );
+  }
+
+  @pragma('vm:entry-point')
+  static void notificationListener(NotificationResponse details) async {
+    try {
+      if (details.payload != null) {
+        await OpenFile.open(details.payload!);
+      }
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   static Future<void> showNotification(LocalNotification notification) async {
