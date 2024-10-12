@@ -10,7 +10,7 @@ class StorageService {
     requestPermission();
   }
 
-  static requestPermission() async {
+  static Future<bool> get permissionStatus async {
     final plugin = DeviceInfoPlugin();
     final androidDeviceInfo = await plugin.androidInfo;
 
@@ -23,7 +23,14 @@ class StorageService {
     }
 
     // storage permission already granted
-    if (status.isGranted) {
+    return status.isGranted;
+  }
+
+  static requestPermission() async {
+    final plugin = DeviceInfoPlugin();
+    final androidDeviceInfo = await plugin.androidInfo;
+
+    if (await permissionStatus) {
       if (kDebugMode) {
         print("Permission already granted");
       }
@@ -37,8 +44,10 @@ class StorageService {
       requestStorage = Permission.videos.request;
     }
 
+    var isGranted = await requestStorage().isGranted;
+
     // storage permission denied
-    if (!await requestStorage().isGranted) {
+    if (!isGranted) {
       if (kDebugMode) {
         print("Permission denied");
       }

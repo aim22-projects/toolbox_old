@@ -35,11 +35,24 @@ class SettingsScreenContent extends StatelessWidget {
               Card(
                 child: Column(
                   children: [
-                    ListTile(
-                      leading: const Icon(Icons.storage),
-                      title: const Text("Storage"),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: provider.getStoragePermission,
+                    FutureBuilder(
+                      initialData: false,
+                      future: provider.storagePermissionStatus,
+                      builder: (context, snapshot) {
+                        var value = switch (snapshot.connectionState) {
+                          ConnectionState.none => false,
+                          ConnectionState.waiting => false,
+                          ConnectionState.done =>
+                            snapshot.hasError ? false : snapshot.data ?? false,
+                          _ => false,
+                        };
+                        return SwitchListTile(
+                          secondary: const Icon(Icons.storage),
+                          title: const Text("Storage"),
+                          value: value,
+                          onChanged: provider.getStoragePermission,
+                        );
+                      },
                     ),
                     const Divider(
                       height: 1,
