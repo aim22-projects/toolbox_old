@@ -1,5 +1,6 @@
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toolbox/constants/preferences_keys.dart';
 
 class Preferences {
   Preferences._() {
@@ -12,15 +13,15 @@ class Preferences {
     if (downloadLocation != null) setDownloadLocation(downloadLocation);
   }
 
-  static Future<String?> get downloadLocation async =>
-      preferences.getString("download_location");
+  static Future<String?> get downloadLocation =>
+      preferences.getString(PreferencesKeys.downloadLocation);
 
-  static setDownloadLocation(String value) async =>
-      preferences.setString("download_location", value);
+  static setDownloadLocation(String value) =>
+      preferences.setString(PreferencesKeys.downloadLocation, value);
 
-  static Future<String?> get themeMode async =>
-      preferences.getString("theme_mode");
+  static Future<String?> get themeMode =>
+      preferences.getString(PreferencesKeys.themeMode);
 
-  static setThemeMode(String value) async =>
-      preferences.setString("theme_mode", value);
+  static setThemeMode(String value) =>
+      preferences.setString(PreferencesKeys.themeMode, value);
 }

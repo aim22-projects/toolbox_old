@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:toolbox/constants/download_fields.dart';
+import 'package:toolbox/constants/download_keys.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/base.dart';
 import 'package:toolbox/services/download_service.dart';
@@ -18,16 +18,16 @@ class DownloadsRepository {
   }
 
   static const String createTableQuery = '''
-    CREATE TABLE IF NOT EXISTS ${DownloadFields.tableName} (
-      ${DownloadFields.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-      ${DownloadFields.url} TEXT NOT NULL,
-      ${DownloadFields.name} TEXT NOT NULL,
-      ${DownloadFields.downloadLocation} TEXT NOT NULL,
-      ${DownloadFields.createdAt} INTEGER NOT NULL,
-      ${DownloadFields.downloadStatus} INTEGER NOT NULL,
-      ${DownloadFields.thumbnailUrl} TEXT,
-      ${DownloadFields.fileSize} INTEGER NULL,
-      ${DownloadFields.downloadedSize} INTEGER NULL
+    CREATE TABLE IF NOT EXISTS ${DownloadKeys.tableName} (
+      ${DownloadKeys.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+      ${DownloadKeys.url} TEXT NOT NULL,
+      ${DownloadKeys.name} TEXT NOT NULL,
+      ${DownloadKeys.downloadLocation} TEXT NOT NULL,
+      ${DownloadKeys.createdAt} INTEGER NOT NULL,
+      ${DownloadKeys.downloadStatus} INTEGER NOT NULL,
+      ${DownloadKeys.thumbnailUrl} TEXT,
+      ${DownloadKeys.fileSize} INTEGER NULL,
+      ${DownloadKeys.downloadedSize} INTEGER NULL
     )
   ''';
 
@@ -36,7 +36,7 @@ class DownloadsRepository {
       await initialized;
       final db = await BaseDatabaseRepository.database;
 
-      var result = await db.query(DownloadFields.tableName);
+      var result = await db.query(DownloadKeys.tableName);
       return result.map((item) => DownloadTask.fromMap(item)).toList();
     } catch (error) {
       if (kDebugMode) print(error);
@@ -50,7 +50,7 @@ class DownloadsRepository {
       await initialized;
       final db = await BaseDatabaseRepository.database;
 
-      return await db.insert(DownloadFields.tableName, task.toMap());
+      return await db.insert(DownloadKeys.tableName, task.toMap());
     } catch (error) {
       if (kDebugMode) print(error);
 
@@ -64,7 +64,7 @@ class DownloadsRepository {
       final db = await BaseDatabaseRepository.database;
 
       return await db.update(
-        DownloadFields.tableName,
+        DownloadKeys.tableName,
         task.toMap(),
         where: "id = ?",
         whereArgs: [task.id],
@@ -82,7 +82,7 @@ class DownloadsRepository {
       final db = await BaseDatabaseRepository.database;
 
       return await db.delete(
-        DownloadFields.tableName,
+        DownloadKeys.tableName,
         where: "id = ?",
         whereArgs: [task.id],
       );

@@ -1,4 +1,4 @@
-class DownloadFields {
+class DownloadKeys {
   // column names
   static const String id = 'id';
   static const String url = 'url';
