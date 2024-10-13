@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/providers/settings.dart';
+import 'package:toolbox/providers/theme.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -33,6 +35,7 @@ class SettingsScreenContent extends StatelessWidget {
                 minTileHeight: 0,
               ),
               Card(
+                elevation: 0,
                 child: Column(
                   children: [
                     FutureBuilder(
@@ -87,6 +90,7 @@ class SettingsScreenContent extends StatelessWidget {
                 minTileHeight: 0,
               ),
               Card(
+                elevation: 0,
                 child: Column(
                   children: [
                     FutureBuilder(
@@ -108,7 +112,29 @@ class SettingsScreenContent extends StatelessWidget {
                           onTap: provider.pickDownloadLocation,
                         );
                       },
-                    )
+                    ),
+                    const Divider(
+                      height: 1,
+                      indent: 8,
+                      endIndent: 8,
+                    ),
+                    Consumer<ThemeProvider>(
+                      builder: (context, provider, child) => PopupMenuButton(
+                        itemBuilder: (BuildContext context) => provider.themes
+                            .map((item) => PopupMenuItem<String>(
+                                  value: item,
+                                  child: Text(item),
+                                ))
+                            .toList(),
+                        onSelected: provider.setThemeValue,
+                        child: ListTile(
+                          leading: const Icon(Icons.contrast),
+                          title: const Text("Theme"),
+                          subtitle: Text(provider.themeValue),
+                          trailing: const Icon(Icons.chevron_right),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

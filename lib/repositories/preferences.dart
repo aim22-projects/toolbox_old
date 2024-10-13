@@ -17,4 +17,10 @@ class Preferences {
 
   static setDownloadLocation(String value) async =>
       preferences.setString("download_location", value);
+
+  static Future<String?> get themeMode async =>
+      preferences.getString("theme_mode");
+
+  static setThemeMode(String value) async =>
+      preferences.setString("theme_mode", value);
 }
