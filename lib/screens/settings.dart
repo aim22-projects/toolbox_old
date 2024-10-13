@@ -43,8 +43,6 @@ class SettingsScreenContent extends StatelessWidget {
                       future: provider.storagePermissionStatus,
                       builder: (context, snapshot) {
                         var value = switch (snapshot.connectionState) {
-                          ConnectionState.none => false,
-                          ConnectionState.waiting => false,
                           ConnectionState.done =>
                             snapshot.hasError ? false : snapshot.data ?? false,
                           _ => false,
@@ -67,8 +65,6 @@ class SettingsScreenContent extends StatelessWidget {
                       future: provider.notificationPermissionStatus,
                       builder: (context, snapshot) {
                         var value = switch (snapshot.connectionState) {
-                          ConnectionState.none => false,
-                          ConnectionState.waiting => false,
                           ConnectionState.done =>
                             snapshot.hasError ? false : snapshot.data ?? false,
                           _ => false,
@@ -98,8 +94,6 @@ class SettingsScreenContent extends StatelessWidget {
                       future: provider.downloadLocation,
                       builder: (context, snapshot) {
                         var value = switch (snapshot.connectionState) {
-                          ConnectionState.none => "Initializing...",
-                          ConnectionState.waiting => "Loading...",
                           ConnectionState.done =>
                             snapshot.hasError ? "-" : snapshot.data ?? "-",
                           _ => "-",

@@ -133,7 +133,7 @@ class NewDownloadProvider extends ChangeNotifier {
     isLoading = true;
     try {
       // 1. get metadata from download url
-      var fileMetaData = await DownloadService.getDownloadFileMetaInfo(url);
+      var fileMetaData = await DownloadService.getMetaInfo(url);
       // 2. parse headers
       fileSize = fileMetaData?.fileSize;
       fileType = fileMetaData?.fileType;

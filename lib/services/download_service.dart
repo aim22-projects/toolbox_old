@@ -103,25 +103,19 @@ class DownloadService {
     }
   }
 
-  static Future<FileMetaData?> getDownloadFileMetaInfo(String url) async {
+  static Future<FileMetaData?> getMetaInfo(String url) async {
     try {
       // 2. fetch data
-      Uri uri = Uri.parse(url);
+      var uri = Uri.parse(url);
       var response = await http.head(uri);
       // 4. check response status code
-      if (response.statusCode != 200) return null;
+      if (response.statusCode != 200) throw "Invalid Response";
       // 5. parse headers
-
-      FileMetaData fileMetaData = FileMetaData(
+      return FileMetaData(
         fileSize: int.tryParse(response.headers['content-length'] ?? ''),
         fileType: response.headers['content-type'],
-        fileName: response.headers.containsKey('content-disposition')
-            ? fileNameFromContentDiscriptionHeader(
-                response.headers['content-disposition'])
-            : fileNameFromContentTypeHeader(response.headers['content-type']) ??
-                '',
+        fileName: fileName(uri, response.headers),
       );
-      return fileMetaData;
     } catch (ex) {
       return null;
     }
