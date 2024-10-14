@@ -3,8 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/providers/theme.dart';
 import 'package:toolbox/routes.dart';
+import 'package:toolbox/services/background_download_service.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  BackgroundDownloadService.init();
   runApp(const MyApp());
 }
 

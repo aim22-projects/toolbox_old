@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
-import 'package:toolbox/services/download_service.dart';
+import 'package:toolbox/services/background_download_service.dart';
 import 'package:toolbox/services/sharing_service.dart';
 import 'package:toolbox/sheets/new_download.dart';
 
@@ -22,7 +22,7 @@ class DownloadsProvider extends ChangeNotifier {
 
   DownloadsProvider({required this.context}) {
     init();
-    DownloadService.updates.listen((task) {
+    BackgroundDownloadService.updates.listen((task) {
       fetchRecords();
     });
   }
