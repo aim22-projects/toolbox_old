@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:toolbox/enums/download_status.dart';
+import 'package:toolbox/extensions/http_ex.dart';
 import 'package:toolbox/extensions/url.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:http/http.dart' as http;
@@ -14,45 +14,48 @@ import 'package:toolbox/services/background_download_service.dart';
 class DownloadService {
   DownloadService._internal();
 
-  static DownloadService get _instance => DownloadService._internal();
-
-  factory DownloadService() => _instance;
-
   static Future<void> downloadFile(DownloadTask task) async {
     try {
       // 2. insert download record
       task.id = await DownloadsRepository.insertTask(task);
 
-      // 3. create download directory if not exists
-      if (!await Directory(task.downloadLocation).exists()) {
-        await Directory(task.downloadLocation).create();
-      }
-
-      // show notification
-      BackgroundDownloadService.sendNotification(
-        task.name,
-        LocalNotification.downloadStarted(task),
-      );
-
-      Dio dio = Dio();
-      await dio.download(
+      HttpEx.download(
         task.url,
         task.filePath,
-        onReceiveProgress: (received, total) {
+        onStarted: () {
+          // show notification
+          BackgroundDownloadService.sendNotification(
+            task.name,
+            LocalNotification.downloadStarted(task),
+          );
+        },
+        onProgress: (received, total) {
           if (total == -1) return;
           // double progress = received / total;
           task.downloadedSize = received;
           task.downloadStatus = DownloadStatus.inProcess;
+          DownloadsRepository.updateTask(task);
           BackgroundDownloadService.updateDownloadProgress(task);
         },
-      );
-      // update database
-      task.downloadStatus = DownloadStatus.completed;
-      BackgroundDownloadService.updateDownloadProgress(task);
-      // show notification
-      BackgroundDownloadService.sendNotification(
-        task.name,
-        LocalNotification.downloadFinished(task),
+        onComplete: () {
+          // update database
+          task.downloadStatus = DownloadStatus.completed;
+          DownloadsRepository.updateTask(task);
+          BackgroundDownloadService.updateDownloadProgress(task);
+          // show notification
+          BackgroundDownloadService.sendNotification(
+            task.name,
+            LocalNotification.downloadFinished(task),
+          );
+        },
+        onError: (error) {
+          // update database
+          task.downloadStatus = DownloadStatus.failed;
+          DownloadsRepository.updateTask(task);
+          BackgroundDownloadService.updateDownloadProgress(task);
+          BackgroundDownloadService.sendNotification(
+              task.name, LocalNotification.downloadFailed(task));
+        },
       );
     } catch (ex) {
       // update database

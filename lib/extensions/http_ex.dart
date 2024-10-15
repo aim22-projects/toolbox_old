@@ -7,12 +7,12 @@ class HttpEx {
   HttpEx._();
   static download(
     String url,
-    String path,
-    void Function() onStarted,
-    void Function(int received, int total) onProgress,
-    void Function() onComplete,
-    void Function(Object error) onError,
-  ) async {
+    String path, {
+    void Function()? onStarted,
+    void Function(int received, int total)? onProgress,
+    void Function()? onComplete,
+    void Function(Object error)? onError,
+  }) async {
     try {
       // 1. create http request
       var request = http.Request('GET', Uri.parse(url));
@@ -29,7 +29,7 @@ class HttpEx {
       final file = File(path);
       final fileSink = file.openWrite();
       // call on started callback
-      onStarted();
+      if (onStarted != null) onStarted();
       // 5. listen downloading data and write to file
       response.stream.listen(
         (List<int> chunk) async {
@@ -38,23 +38,23 @@ class HttpEx {
           // update progress
           received += chunk.length;
           // call in progress callback
-          onProgress(received, totalSize);
+          if (onProgress != null) onProgress(received, totalSize);
         },
         onDone: () async {
           // close file write
           await fileSink.close();
           // call on complete callback
-          onComplete();
+          if (onComplete != null) onComplete();
         },
         onError: (error) async {
           // close file write
           await fileSink.close();
           // call on error callback
-          onError(error);
+          if (onError != null) onError(error);
         },
       );
     } catch (ex) {
-      onError(ex);
+      if (onError != null) onError(ex);
     }
   }
 }
