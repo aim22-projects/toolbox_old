@@ -81,6 +81,16 @@ class DownloadsScreenContent extends StatelessWidget {
           },
           child: const Icon(Icons.add),
         ),
+        // bottomNavigationBar: Row(
+        //   children: [
+        //     // Expanded(child: Material()),
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+        //     IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+        //   ],
+        // ),
       ),
     );
   }
