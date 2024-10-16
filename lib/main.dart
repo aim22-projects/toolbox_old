@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
             ).copyWith(
               textTheme:
                   GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
+              visualDensity: VisualDensity.comfortable,
             ),
             darkTheme: ThemeData.dark().copyWith(
               appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
@@ -37,9 +38,13 @@ class MyApp extends StatelessWidget {
                 ),
                 elevation: 0,
               ),
+              dialogTheme: ThemeData.dark()
+                  .dialogTheme
+                  .copyWith(backgroundColor: Colors.grey[900]),
               scaffoldBackgroundColor: Colors.black,
               textTheme:
                   GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+              visualDensity: VisualDensity.standard,
             ),
             themeMode: themeProvider.themeMode,
             routerConfig: appRouter,

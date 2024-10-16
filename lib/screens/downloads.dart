@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toolbox/dialogs/new_download.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/sheets/download_details.dart';
@@ -35,7 +36,7 @@ class DownloadsScreenContent extends StatelessWidget {
               onPressed: () =>
                   GoRouter.of(context).pushNamed(AppRouteNames.settings),
               icon: const Icon(Icons.settings),
-            )
+            ),
           ],
         ),
         body: Column(
@@ -74,7 +75,7 @@ class DownloadsScreenContent extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           // onPressed: downloadsProvider.goToNewDownloadScreen,
           onPressed: () async {
-            await NewDownloadSheet.show(context, null);
+            await NewDownloadDialog.show(context, null);
             await downloadsProvider.fetchRecords();
           },
           child: const Icon(Icons.add),
