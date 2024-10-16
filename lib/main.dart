@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:toolbox/app_theme.dart';
 import 'package:toolbox/providers/theme.dart';
 import 'package:toolbox/routes.dart';
 import 'package:toolbox/services/background_download_service.dart';
@@ -21,31 +21,9 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp.router(
-            title: 'Flutter Demo',
-            theme: ThemeData.light(
-              useMaterial3: true,
-            ).copyWith(
-              textTheme:
-                  GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
-              visualDensity: VisualDensity.comfortable,
-            ),
-            darkTheme: ThemeData.dark().copyWith(
-              appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
-              cardTheme: CardTheme(
-                color: Colors.grey[900], // Dark card background
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-              dialogTheme: ThemeData.dark()
-                  .dialogTheme
-                  .copyWith(backgroundColor: Colors.grey[900]),
-              scaffoldBackgroundColor: Colors.black,
-              textTheme:
-                  GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
-              visualDensity: VisualDensity.standard,
-            ),
+            title: 'Toolbox',
+            theme: lightTheme,
+            darkTheme: darkTheme,
             themeMode: themeProvider.themeMode,
             routerConfig: appRouter,
           );

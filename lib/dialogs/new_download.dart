@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:toolbox/app_theme.dart';
 import 'package:toolbox/extensions/file.dart';
 import 'package:toolbox/providers/new_download.dart';
 
@@ -12,24 +13,17 @@ class NewDownloadDialog extends StatelessWidget {
       context: context,
       builder: (context) {
         return Theme(
-            data: Theme.of(context).copyWith(
-              cardTheme: CardTheme(
-                color: Colors.grey[800], // Dark card background
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                elevation: 0,
-              ),
-            ),
-            child: ChangeNotifierProvider<NewDownloadProvider>(
-              create: (context) {
-                return NewDownloadProvider(
-                  context: context,
-                  downloadUrl: downloadUrl,
-                );
-              },
-              child: const NewDownloadDialog(),
-            ));
+          data: cardOnDialogTheme(context),
+          child: ChangeNotifierProvider<NewDownloadProvider>(
+            create: (context) {
+              return NewDownloadProvider(
+                context: context,
+                downloadUrl: downloadUrl,
+              );
+            },
+            child: const NewDownloadDialog(),
+          ),
+        );
       },
     );
   }
