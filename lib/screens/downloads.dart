@@ -42,6 +42,7 @@ class DownloadsScreenContent extends StatelessWidget {
         body: Column(
           children: [
             Card(
+              elevation: 0,
               child: ListView.separated(
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),

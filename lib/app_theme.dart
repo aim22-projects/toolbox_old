@@ -26,16 +26,14 @@ final darkTheme = ThemeData.dark().copyWith(
 );
 
 var cardOnDialogTheme = (BuildContext context) => Theme.of(context).copyWith(
-      cardTheme: CardTheme(
-        color: cardBackgroundColorOnDialog(context),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        elevation: 0,
-      ),
+      cardTheme: Theme.of(context).cardTheme.copyWith(
+            color: cardBackgroundColorOnDialog(context),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 0,
+          ),
     );
 
 var cardBackgroundColorOnDialog = (BuildContext context) =>
-    Theme.of(context).brightness == Brightness.dark
-        ? Colors.grey[800]
-        : Colors.grey.shade50;
+    Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : null;

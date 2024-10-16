@@ -139,6 +139,7 @@ class _DownloadSaverDialog extends StatelessWidget {
                     children: [
                       if (newDownloadProvider.fileName.isNotEmpty)
                         TextField(
+                          autofocus: true,
                           controller:
                               newDownloadProvider.fileNameInputController,
                           decoration: const InputDecoration(
