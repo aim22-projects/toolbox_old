@@ -19,7 +19,7 @@ class DownloadService {
       // 2. insert download record
       task.id = await DownloadsRepository.insertTask(task);
 
-      HttpEx.download(
+      await HttpEx.download(
         task.url,
         task.filePath,
         onStarted: () {
