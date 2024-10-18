@@ -4,23 +4,37 @@ import 'package:google_fonts/google_fonts.dart';
 final lightTheme = ThemeData.light(
   useMaterial3: true,
 ).copyWith(
-  textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
-  visualDensity: VisualDensity.comfortable,
-);
-
-final darkTheme = ThemeData.dark().copyWith(
-  appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
+  primaryColor: const Color.fromRGBO(255, 81, 106, 1),
+  scaffoldBackgroundColor: const Color.fromRGBO(243, 244, 246, 1),
+  appBarTheme:
+      const AppBarTheme(backgroundColor: Color.fromRGBO(243, 244, 246, 1)),
   cardTheme: CardTheme(
-    color: Colors.grey[900], // Dark card background
+    color: Colors.white, // Dark card background
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
     ),
     elevation: 0,
   ),
-  dialogTheme: ThemeData.dark().dialogTheme.copyWith(
-        backgroundColor: Colors.grey[900],
-      ),
+  dialogTheme:
+      ThemeData.light().dialogTheme.copyWith(backgroundColor: Colors.white),
+  textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
+  visualDensity: VisualDensity.comfortable,
+);
+
+final darkTheme = ThemeData.dark().copyWith(
+  primaryColor: const Color.fromRGBO(255, 81, 106, 1),
   scaffoldBackgroundColor: Colors.black,
+  appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
+  cardTheme: CardTheme(
+    color: const Color.fromRGBO(26, 26, 26, 1), // Dark card background
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    elevation: 0,
+  ),
+  dialogTheme: ThemeData.dark()
+      .dialogTheme
+      .copyWith(backgroundColor: const Color.fromRGBO(46, 46, 46, 1)),
   textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
   visualDensity: VisualDensity.standard,
 );
