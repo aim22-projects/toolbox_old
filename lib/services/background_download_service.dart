@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/local_notification.dart';
@@ -15,16 +16,16 @@ class BackgroundDownloadService {
 
   static init() => Workmanager().initialize(callback);
 
-  static sendNotificationMap(
-    String uniqueName,
-    Map<String, dynamic> payload,
-  ) {
-    Workmanager().registerOneOffTask(
-      uniqueName,
-      "notification",
-      inputData: payload,
-    );
-  }
+  // static sendNotificationMap(
+  //   String uniqueName,
+  //   Map<String, dynamic> payload,
+  // ) {
+  //   Workmanager().registerOneOffTask(
+  //     uniqueName,
+  //     "notification",
+  //     inputData: payload,
+  //   );
+  // }
 
   static sendNotification(
     String uniqueName,
@@ -33,7 +34,7 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       uniqueName,
       "notification",
-      inputData: notification.toMap(),
+      inputData: {"notification": jsonEncode(notification)},
     );
   }
 
@@ -41,7 +42,7 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       task.name,
       "downloadProgress",
-      inputData: task.toMap(),
+      inputData: {"task": jsonEncode(task)},
     );
   }
 
@@ -49,7 +50,7 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       task.name + DateTime.now().millisecondsSinceEpoch.toString(),
       "download",
-      inputData: task.toMap(),
+      inputData: {"task": jsonEncode(task)},
     );
   }
 
@@ -57,19 +58,25 @@ class BackgroundDownloadService {
   static callback() {
     Workmanager().executeTask((task, inputData) async {
       if (task == "download" && inputData != null) {
-        DownloadTask downloadTask = DownloadTask.fromMap(inputData);
+        DownloadTask downloadTask =
+            DownloadTask.fromMap(jsonDecode(inputData['task']));
         await DownloadService.downloadFile(downloadTask);
       }
       if (task == "downloadProgress" && inputData != null) {
-        DownloadTask downloadTask = DownloadTask.fromMap(inputData);
+        DownloadTask downloadTask =
+            DownloadTask.fromMap(jsonDecode(inputData['task']));
         updatesStreamController.sink.add(downloadTask);
 
         sendNotification(downloadTask.name,
             LocalNotification.downloadInProgress(downloadTask));
       }
       if (task == "notification" && inputData != null) {
-        var notification = LocalNotification.fromMap(inputData);
+        var notification =
+            LocalNotification.fromMap(jsonDecode(inputData['notification']));
         NotificationService.showNotification(notification);
+
+        sendNotification(
+            DateTime.now().millisecondsSinceEpoch.toString(), notification);
       }
       return Future.value(true);
     });

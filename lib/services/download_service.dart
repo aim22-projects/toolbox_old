@@ -29,7 +29,7 @@ class DownloadService {
             LocalNotification.downloadStarted(task),
           );
         },
-        onProgress: (received, total) {
+        onProgress: (int received, int total) {
           if (total == -1) return;
           // double progress = received / total;
           task.downloadedSize = received;

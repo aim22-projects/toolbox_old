@@ -13,6 +13,7 @@ class SettingsProvider extends ChangeNotifier {
     if (!newValue) return;
     await NotificationService.requestPermission();
     await NotificationService.init();
+    notifyListeners();
   }
 
   Future<void> getStoragePermission(bool newValue) async {
