@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/models/local_notification.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
@@ -34,7 +35,7 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       uniqueName,
       "notification",
-      inputData: {"notification": jsonEncode(notification)},
+      inputData: {"notification": jsonEncode(notification.toMap())},
     );
   }
 
@@ -42,7 +43,7 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       task.name,
       "downloadProgress",
-      inputData: {"task": jsonEncode(task)},
+      inputData: {"task": jsonEncode(task.toMap())},
     );
   }
 
@@ -50,13 +51,16 @@ class BackgroundDownloadService {
     Workmanager().registerOneOffTask(
       task.name + DateTime.now().millisecondsSinceEpoch.toString(),
       "download",
-      inputData: {"task": jsonEncode(task)},
+      inputData: {"task": jsonEncode(task.toMap())},
     );
   }
 
   @pragma('vm:entry-point')
   static callback() {
     Workmanager().executeTask((task, inputData) async {
+      if (kDebugMode) {
+        print(task);
+      }
       if (task == "download" && inputData != null) {
         DownloadTask downloadTask =
             DownloadTask.fromMap(jsonDecode(inputData['task']));

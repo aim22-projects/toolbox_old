@@ -7,13 +7,23 @@ import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/background_download_service.dart';
 import 'package:toolbox/services/sharing_service.dart';
+import 'package:toolbox/sheets/download_details.dart';
 import 'package:toolbox/sheets/new_download.dart';
 
 class DownloadsProvider extends ChangeNotifier {
   List<DownloadTask> _downloads = [];
   final BuildContext context;
 
+  DownloadTask? _selectedTask;
+
   List<DownloadTask> get downloads => _downloads;
+  DownloadTask? get selectedTask => _selectedTask;
+  bool get isMenuVisible => selectedTask != null;
+
+  set selectedTask(value) {
+    _selectedTask = value;
+    notifyListeners();
+  }
 
   set downloads(List<DownloadTask> value) {
     _downloads = value;
@@ -120,4 +130,14 @@ class DownloadsProvider extends ChangeNotifier {
       );
     }
   }
+
+  void hideMenu() => selectedTask = null;
+
+  void showMenu(DownloadTask value) => selectedTask = value;
+
+  void showInfo() {
+    if (selectedTask != null) DownloadDetailsSheet.show(context, selectedTask!);
+  }
+
+  void deleteSelectedTask() => deleteTask(selectedTask!);
 }
