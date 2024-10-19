@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:open_file/open_file.dart';
+import 'package:toolbox/dialogs/delete_download.dart';
 import 'package:toolbox/models/download_task.dart';
 import 'package:toolbox/repositories/database/downloads.dart';
 import 'package:toolbox/services/background_download_service.dart';
@@ -92,6 +93,7 @@ class DownloadsProvider extends ChangeNotifier {
   Future<void> fetchRecords() async {
     // 1. fetch database values
     downloads = await DownloadsRepository.getTasks() ?? [];
+    selectedTask = null;
   }
 
   Future<void> deleteTask(DownloadTask task) async {
@@ -131,6 +133,21 @@ class DownloadsProvider extends ChangeNotifier {
     }
   }
 
+  void askDeleteTask(DownloadTask task) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete ${task.name}?"),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void hideMenu() => selectedTask = null;
 
   void showMenu(DownloadTask value) => selectedTask = value;
@@ -140,4 +157,7 @@ class DownloadsProvider extends ChangeNotifier {
   }
 
   void deleteSelectedTask() => deleteTask(selectedTask!);
+
+  void confirmDeleteSelectedTask() =>
+      DeleteDownloadDialog.show(context, selectedTask, deleteSelectedTask);
 }

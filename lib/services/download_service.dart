@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/extensions/http_ex.dart';
 import 'package:toolbox/extensions/url.dart';

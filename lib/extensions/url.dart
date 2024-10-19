@@ -18,6 +18,7 @@ String? fileNameFromContentTypeHeader(String? value) {
   return value?.replaceFirst('/', '.');
 }
 
+// ignore: unused_element
 String _fromUrl(String url) {
   Uri uri = Uri.parse(url);
   return uri.pathSegments.isNotEmpty ? uri.pathSegments.last : '';

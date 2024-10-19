@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -30,18 +31,27 @@ class DownloadsScreenContent extends StatelessWidget {
           if (didPop) return;
           downloadsProvider.hideMenu();
         },
+        canPop: false, // !downloadsProvider.isMenuVisible,
         child: Scaffold(
           // resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            title: const Text('Downloads'),
-            actions: [
-              IconButton(
-                onPressed: () =>
-                    GoRouter.of(context).pushNamed(AppRouteNames.settings),
-                icon: const Icon(Icons.settings),
-              ),
-            ],
-          ),
+          appBar: !downloadsProvider.isMenuVisible
+              ? AppBar(
+                  title: const Text('Downloads'),
+                  actions: [
+                    IconButton(
+                      onPressed: () => GoRouter.of(context)
+                          .pushNamed(AppRouteNames.settings),
+                      icon: const Icon(Icons.settings),
+                    ),
+                  ],
+                )
+              : AppBar(
+                  leading: IconButton(
+                    onPressed: downloadsProvider.hideMenu,
+                    icon: const Icon(Icons.clear),
+                  ),
+                  title: const Text("1 Selected"),
+                ),
           body: SingleChildScrollView(
             child: Card(
               elevation: 0,
@@ -50,7 +60,8 @@ class DownloadsScreenContent extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, index) => DownloadTile(
                   downloadTask: downloadsProvider.downloads[index],
-                  selected: false,
+                  selected: downloadsProvider.selectedTask ==
+                      downloadsProvider.downloads[index],
                   onTap: () => downloadsProvider.openFile(
                     downloadsProvider.downloads[index],
                   ),
@@ -84,30 +95,56 @@ class DownloadsScreenContent extends StatelessWidget {
             },
             child: const Icon(Icons.add),
           ),
-          bottomNavigationBar: BottomMenuBar(items: [
-            const BottomMenuItem(
-              icon: Icons.share,
-              title: "Share",
-            ),
-            const BottomMenuItem(
-              icon: Icons.edit,
-              title: "Edit",
-            ),
-            BottomMenuItem(
-              icon: Icons.info,
-              title: "Info",
-              onTap: downloadsProvider.showInfo,
-            ),
-            BottomMenuItem(
-              icon: Icons.delete,
-              title: "Delete",
-              onTap: downloadsProvider.deleteSelectedTask,
-            ),
-            const BottomMenuItem(
-              icon: Icons.more_vert,
-              title: "More",
-            ),
-          ]),
+          bottomNavigationBar: !downloadsProvider.isMenuVisible
+              ? null
+              : BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.share),
+                      label: 'Share',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.edit),
+                      label: 'Edit',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.info),
+                      label: 'Info',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.delete),
+                      label: 'Delete',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.more_vert),
+                      label: 'More',
+                    ),
+                  ],
+                  type: BottomNavigationBarType.fixed,
+                  // currentIndex: 0,
+                  selectedItemColor: Colors.black,
+                  unselectedItemColor: Colors.black, //grey.shade700,
+                  iconSize: 26,
+                  onTap: (int value) {
+                    switch (value) {
+                      case 0: // share
+                        break;
+                      case 1: // edit
+                        break;
+                      case 2: // info
+                        downloadsProvider.showInfo();
+                        break;
+                      case 3: // delete
+                        downloadsProvider.confirmDeleteSelectedTask();
+                        break;
+                      case 4: // more
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                  elevation: 5,
+                ),
         ),
       ),
     );
