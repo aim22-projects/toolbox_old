@@ -60,13 +60,22 @@ class DownloadsScreenContent extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, index) => DownloadTile(
                   downloadTask: downloadsProvider.downloads[index],
-                  selected: downloadsProvider.selectedTask ==
+                  selectionButtonEnabled:
+                      downloadsProvider.selectedDownloads.isNotEmpty,
+                  selected: downloadsProvider.selectedDownloads.contains(index),
+                  onTap: () {
+                    downloadsProvider.openFile(
                       downloadsProvider.downloads[index],
-                  onTap: () => downloadsProvider.openFile(
-                    downloadsProvider.downloads[index],
-                  ),
-                  onLongPress: () => downloadsProvider
-                      .showMenu(downloadsProvider.downloads[index]),
+                    );
+                  },
+                  onLongPress: () {
+                    downloadsProvider.toggleSelection(index);
+                  },
+                  onSelectionChanged: () {
+                    downloadsProvider.toggleSelection(index);
+                  },
+                  // onLongPress: () => downloadsProvider
+                  //     .showMenu(downloadsProvider.downloads[index]),
                   // onLongPress: () => DownloadDetailsSheet.show(
                   //   context,
                   //   downloadsProvider.downloads[index],

@@ -13,21 +13,21 @@ import 'package:toolbox/sheets/new_download.dart';
 
 class DownloadsProvider extends ChangeNotifier {
   List<DownloadTask> _downloads = [];
+  Set<int> _selectedDownloads = {};
   final BuildContext context;
 
-  DownloadTask? _selectedTask;
-
   List<DownloadTask> get downloads => _downloads;
-  DownloadTask? get selectedTask => _selectedTask;
-  bool get isMenuVisible => selectedTask != null;
+  Set<int> get selectedDownloads => _selectedDownloads;
 
-  set selectedTask(value) {
-    _selectedTask = value;
-    notifyListeners();
-  }
+  bool get isMenuVisible => selectedDownloads.isNotEmpty;
 
   set downloads(List<DownloadTask> value) {
     _downloads = value;
+    notifyListeners();
+  }
+
+  set selectedDownloads(Set<int> value) {
+    _selectedDownloads = value;
     notifyListeners();
   }
 
@@ -93,12 +93,7 @@ class DownloadsProvider extends ChangeNotifier {
   Future<void> fetchRecords() async {
     // 1. fetch database values
     downloads = await DownloadsRepository.getTasks() ?? [];
-    selectedTask = null;
-  }
-
-  Future<void> deleteTask(DownloadTask task) async {
-    await DownloadsRepository.deleteTask(task);
-    fetchRecords();
+    clearSelection();
   }
 
   Future<void> goToNewDownloadScreen() async {
@@ -148,16 +143,54 @@ class DownloadsProvider extends ChangeNotifier {
     );
   }
 
-  void hideMenu() => selectedTask = null;
+  void hideMenu() => clearSelection();
 
-  void showMenu(DownloadTask value) => selectedTask = value;
+  // void showMenu(DownloadTask value) => selectedTask = value;
 
-  void showInfo() {
-    if (selectedTask != null) DownloadDetailsSheet.show(context, selectedTask!);
+  void toggleSelection(int index) {
+    if (_selectedDownloads.contains(index)) {
+      _selectedDownloads.remove(index);
+    } else {
+      _selectedDownloads.add(index);
+    }
+    notifyListeners();
   }
 
-  void deleteSelectedTask() => deleteTask(selectedTask!);
+  void clearSelection() {
+    selectedDownloads.clear();
+    notifyListeners();
+  }
 
-  void confirmDeleteSelectedTask() =>
-      DeleteDownloadDialog.show(context, selectedTask, deleteSelectedTask);
+  void showInfo() {
+    if (selectedDownloads.isEmpty) return;
+
+    DownloadDetailsSheet.show(context, downloads[selectedDownloads.first]);
+  }
+
+  Future<void> deleteSelectedTask() async {
+    if (selectedDownloads.isEmpty) return;
+
+    for (var index in selectedDownloads) {
+      await DownloadsRepository.deleteTask(downloads[index]);
+    }
+
+    fetchRecords();
+  }
+
+  Future<void> deleteTask(DownloadTask task) async {
+    await DownloadsRepository.deleteTask(task);
+    fetchRecords();
+  }
+
+  void confirmDeleteSelectedTask() {
+    if (selectedDownloads.isEmpty) return;
+
+    var firstRecord = downloads[selectedDownloads.first];
+
+    DeleteDownloadDialog.show(
+      context,
+      firstRecord,
+      deleteSelectedTask,
+    );
+  }
 }

@@ -5,8 +5,10 @@ import 'package:toolbox/models/download_task.dart';
 class DownloadTile extends StatelessWidget {
   final DownloadTask downloadTask;
   final bool selected;
+  final bool selectionButtonEnabled;
   final void Function()? onLongPress;
   final void Function()? onTap;
+  final void Function()? onSelectionChanged;
 
   const DownloadTile({
     super.key,
@@ -14,6 +16,8 @@ class DownloadTile extends StatelessWidget {
     this.onTap,
     required this.downloadTask,
     required this.selected,
+    this.selectionButtonEnabled = false,
+    required this.onSelectionChanged,
   });
 
   @override
@@ -58,9 +62,18 @@ class DownloadTile extends StatelessWidget {
               ],
             )
           : Text(downloadTask.fileSizeValue),
-      trailing: (downloadTask.downloadStatus == DownloadStatus.paused
-          ? const Icon(Icons.pause)
-          : null),
+      // trailing: (downloadTask.downloadStatus == DownloadStatus.paused
+      //     ? const Icon(Icons.pause)
+      //     : null),
+
+      trailing: !selectionButtonEnabled
+          ? null
+          : IconButton(
+              onPressed: onSelectionChanged,
+              icon: selected
+                  ? const Icon(Icons.check_box)
+                  : const Icon(Icons.check_box_outline_blank),
+            ),
     );
   }
 }
