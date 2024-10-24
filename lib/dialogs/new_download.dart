@@ -160,7 +160,9 @@ class _DownloadSaverDialog extends StatelessWidget {
                         title: const Text("File Size"),
                         trailing: Text(
                           getFileSizeString(
-                              bytes: newDownloadProvider.fileSize ?? 0),
+                            bytes:
+                                newDownloadProvider.fileMetaData?.fileSize ?? 0,
+                          ),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),

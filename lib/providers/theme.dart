@@ -24,11 +24,7 @@ class ThemeProvider extends ChangeNotifier {
   Future<void> loadTheme() async {
     final themeString = await Preferences.themeMode;
 
-    _themeMode = switch (themeString) {
-      'ThemeMode.dark' => ThemeMode.dark,
-      'ThemeMode.light' => ThemeMode.light,
-      _ => ThemeMode.system
-    };
+    _themeMode = themeModeFromValue(themeString ?? "");
 
     notifyListeners();
   }

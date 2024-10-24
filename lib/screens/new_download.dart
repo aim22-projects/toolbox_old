@@ -32,7 +32,7 @@ class NewDownloadScreenContent extends StatelessWidget {
         ),
         body: Column(
           children: [
-            if (newDownloadProvider.fileSize != null) ...[
+            if (newDownloadProvider.fileMetaData?.fileSize != null) ...[
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: CircleAvatar(
@@ -42,7 +42,7 @@ class NewDownloadScreenContent extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}",
+                  "Size: ${getFileSizeString(bytes: newDownloadProvider.fileMetaData?.fileSize ?? 0)}",
                 ),
               ),
             ],

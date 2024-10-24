@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toolbox/enums/download_status.dart';
 import 'package:toolbox/models/download_task.dart';
+import 'package:toolbox/models/file_meta_data.dart';
 import 'package:toolbox/models/instagram_reel.dart';
 import 'package:toolbox/repositories/preferences.dart';
 import 'package:toolbox/services/download_service.dart';
@@ -15,11 +16,9 @@ class NewDownloadProvider extends ChangeNotifier {
   final fileNameInputController = TextEditingController();
 
   bool _isLoading = false;
-  int? _fileSize;
-  String? _fileType;
+  FileMetaData? _fileMetaData;
 
-  String? get fileType => _fileType;
-  int? get fileSize => _fileSize;
+  FileMetaData? get fileMetaData => _fileMetaData;
   bool get isLoading => _isLoading;
 
   String get url => urlInputController.text;
@@ -28,13 +27,8 @@ class NewDownloadProvider extends ChangeNotifier {
 
   bool get isFormValid => url.isNotEmpty && fileName.isNotEmpty;
 
-  set fileType(String? value) {
-    _fileType = value;
-    notifyListeners();
-  }
-
-  set fileSize(int? value) {
-    _fileSize = value;
+  set fileMetaData(FileMetaData? value) {
+    _fileMetaData = value;
     notifyListeners();
   }
 
@@ -90,7 +84,7 @@ class NewDownloadProvider extends ChangeNotifier {
       createdAt: DateTime.now(),
       downloadStatus: DownloadStatus.loading,
       thumbnailUrl: '',
-      fileSize: fileSize,
+      fileSize: fileMetaData?.fileSize,
     ));
     notifyListeners();
     // ignore: use_build_context_synchronously
@@ -133,10 +127,8 @@ class NewDownloadProvider extends ChangeNotifier {
     isLoading = true;
     try {
       // 1. get metadata from download url
-      var fileMetaData = await DownloadService.getMetaInfo(url);
+      fileMetaData = await DownloadService.getMetaInfo(url);
       // 2. parse headers
-      fileSize = fileMetaData?.fileSize;
-      fileType = fileMetaData?.fileType;
       fileName = fileMetaData?.fileName ?? '';
     } catch (error) {
       // ignore: use_build_context_synchronously

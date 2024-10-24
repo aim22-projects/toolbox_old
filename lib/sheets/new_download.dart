@@ -66,7 +66,7 @@ class NewDownloadSheetContent extends StatelessWidget {
                   elevation: 1,
                   backgroundColor: Theme.of(context).dialogBackgroundColor,
                 ),
-                if (newDownloadProvider.fileSize != null) ...[
+                if (newDownloadProvider.fileMetaData?.fileSize != null) ...[
                   const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: CircleAvatar(
@@ -76,7 +76,7 @@ class NewDownloadSheetContent extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      "Size: ${getFileSizeString(bytes: newDownloadProvider.fileSize ?? 0)}",
+                      "Size: ${getFileSizeString(bytes: newDownloadProvider.fileMetaData?.fileSize ?? 0)}",
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
