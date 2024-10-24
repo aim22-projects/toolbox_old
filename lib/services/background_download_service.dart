@@ -61,26 +61,35 @@ class BackgroundDownloadService {
       if (kDebugMode) {
         print(task);
       }
-      if (task == "download" && inputData != null) {
-        DownloadTask downloadTask =
-            DownloadTask.fromMap(jsonDecode(inputData['task']));
-        await DownloadService.downloadFile(downloadTask);
-      }
-      if (task == "downloadProgress" && inputData != null) {
-        DownloadTask downloadTask =
-            DownloadTask.fromMap(jsonDecode(inputData['task']));
-        updatesStreamController.sink.add(downloadTask);
-
-        sendNotification(downloadTask.name,
-            LocalNotification.downloadInProgress(downloadTask));
-      }
-      if (task == "notification" && inputData != null) {
-        var notification =
-            LocalNotification.fromMap(jsonDecode(inputData['notification']));
-        NotificationService.showNotification(notification);
-
-        sendNotification(
-            DateTime.now().millisecondsSinceEpoch.toString(), notification);
+      switch (task) {
+        case 'download' when inputData != null:
+          DownloadTask downloadTask = DownloadTask.fromMap(
+            jsonDecode(inputData['task']),
+          );
+          await DownloadService.downloadFile(downloadTask);
+          break;
+        case 'downloadProgress' when inputData != null:
+          DownloadTask downloadTask = DownloadTask.fromMap(
+            jsonDecode(inputData['task']),
+          );
+          updatesStreamController.sink.add(downloadTask);
+          sendNotification(
+            downloadTask.name,
+            LocalNotification.downloadInProgress(downloadTask),
+          );
+          break;
+        case 'notification' when inputData != null:
+          var notification = LocalNotification.fromMap(
+            jsonDecode(inputData['notification']),
+          );
+          NotificationService.showNotification(notification);
+          sendNotification(
+            DateTime.now().millisecondsSinceEpoch.toString(),
+            notification,
+          );
+          break;
+        default:
+          break;
       }
       return Future.value(true);
     });
