@@ -9,18 +9,18 @@ class Preferences {
   static SharedPreferencesAsync preferences = SharedPreferencesAsync();
 
   init() async {
-    String? downloadLocation = (await getDownloadsDirectory())?.path;
+    var downloadLocation = (await getDownloadsDirectory())?.path;
     if (downloadLocation != null) setDownloadLocation(downloadLocation);
   }
 
   static Future<String?> get downloadLocation =>
       preferences.getString(PreferencesKeys.downloadLocation);
 
-  static setDownloadLocation(String value) =>
-      preferences.setString(PreferencesKeys.downloadLocation, value);
-
   static Future<String?> get themeMode =>
       preferences.getString(PreferencesKeys.themeMode);
+
+  static setDownloadLocation(String value) =>
+      preferences.setString(PreferencesKeys.downloadLocation, value);
 
   static setThemeMode(String value) =>
       preferences.setString(PreferencesKeys.themeMode, value);

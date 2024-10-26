@@ -28,7 +28,7 @@ class SettingsProvider extends ChangeNotifier {
     // 1. pick location
     String? selectedDirectory = await FilePicker.platform
         .getDirectoryPath(initialDirectory: await Preferences.downloadLocation);
-    // 1.1. validate result
+
     if (selectedDirectory == null) return;
 
     // 2. save selected location
