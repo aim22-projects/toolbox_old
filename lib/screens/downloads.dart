@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:toolbox/dialogs/new_download.dart';
 import 'package:toolbox/providers/downloads.dart';
 import 'package:toolbox/routes.dart';
-import 'package:toolbox/widgets/bottom_menu_bar.dart';
 import 'package:toolbox/widgets/download_tile.dart';
 
 class DownloadsScreen extends StatelessWidget {
@@ -73,19 +71,7 @@ class DownloadsScreenContent extends StatelessWidget {
                   },
                   onSelectionChanged: () {
                     downloadsProvider.toggleSelection(index);
-                  },
-                  // onLongPress: () => downloadsProvider
-                  //     .showMenu(downloadsProvider.downloads[index]),
-                  // onLongPress: () => DownloadDetailsSheet.show(
-                  //   context,
-                  //   downloadsProvider.downloads[index],
-                  //   () async {
-                  //     await downloadsProvider
-                  //         .deleteTask(downloadsProvider.downloads[index]);
-                  //     // ignore: use_build_context_synchronously
-                  //     GoRouter.of(context).pop();
-                  //   },
-                  // ),
+                  }, 
                 ),
                 separatorBuilder: (context, index) => const Divider(
                   height: 1,
